@@ -1,15 +1,18 @@
 package com.epam.esm.core.service;
 
+import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface GiftCertificateService {
-    List<GiftCertificate> getAllGiftCertificates();
+    List<GiftCertificateDto> getAllGiftCertificates();
 
-    GiftCertificate getGiftCertificateById(String id);
+    GiftCertificateDto getGiftCertificateById(String id);
 
     @Transactional
     void removeGiftCertificateById(String id);
+
+    GiftCertificateDto addGiftCertificate(GiftCertificateDto giftCertificateDto);
 }

@@ -1,9 +1,8 @@
 package com.epam.esm.api.controller;
 
-import com.epam.esm.core.entity.GiftCertificate;
+import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +19,13 @@ public class GiftCertificateController {
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<GiftCertificate> getAllGiftCertificates() {
-        System.out.println("eto get zapros");
+    public List<GiftCertificateDto> getAllGiftCertificates() {
         return giftCertificateService.getAllGiftCertificates();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificate getGiftCertificateById(@PathVariable String id) {
+    public GiftCertificateDto getGiftCertificateById(@PathVariable String id) {
         return giftCertificateService.getGiftCertificateById(id);
     }
 
@@ -39,8 +37,7 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificate addGiftCertificate(@RequestBody GiftCertificate giftCertificate) {
-
-        return null;
+    public GiftCertificateDto addGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.addGiftCertificate(giftCertificateDto);
     }
 }
