@@ -4,17 +4,13 @@ import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.DuplicateTagNameException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.repository.mapper.TagRowMapper;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
@@ -40,10 +36,12 @@ public class TagRepositoryImpl implements TagRepository {
         }
     }
 
+    @Override
     public List<Tag> getAllTags() {
         return jdbcTemplate.query("SELECT * FROM tag", new TagRowMapper());
     }
 
+    @Override
     public Tag addTag(Tag tag) {
         //TODO validation for unique name
         if (checkIfExistsByName(tag.getName())) {
@@ -73,6 +71,7 @@ public class TagRepositoryImpl implements TagRepository {
         }, name) > 0;
     }
 
+    @Override
     public void removeTagById(long id) {
         jdbcTemplate.update("DELETE FROM tag WHERE id = ?", id);
     }

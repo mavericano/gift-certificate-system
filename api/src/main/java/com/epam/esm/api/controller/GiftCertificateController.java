@@ -40,4 +40,6 @@ public class GiftCertificateController {
     public GiftCertificateDto addGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.addGiftCertificate(giftCertificateDto);
     }
+
+    //TODO add PUT and PATCH
 }
