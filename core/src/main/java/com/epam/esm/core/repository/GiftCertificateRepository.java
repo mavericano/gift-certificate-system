@@ -17,5 +17,7 @@ public interface GiftCertificateRepository {
 
     GiftCertificate addGiftCertificate(GiftCertificate giftCertificate);
 
+    void linkTagsToGiftCertificate(long giftCertificateId, Set<Tag> tagSet);
+
     void removeGiftCertificateById(long id);
 }

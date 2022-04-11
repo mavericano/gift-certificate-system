@@ -5,6 +5,7 @@ import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.mapper.GiftCertificateRowMapper;
 import com.epam.esm.core.repository.mapper.TagRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -35,8 +36,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public Optional<GiftCertificate> getGiftCertificateById(long id) {
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject("SELECT * FROM gift_certificate WHERE id = ?", new GiftCertificateRowMapper(), id));
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject("SELECT * FROM gift_certificate WHERE id = ?", new GiftCertificateRowMapper(), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     //if db is empty, produces empty list
@@ -68,6 +73,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             throw new RuntimeException("Unable to retrieve id for added GiftCertificate");
         }
         return giftCertificate;
+    }
+
+    @Override
+    public void linkTagsToGiftCertificate(long giftCertificateId, Set<Tag> tagSet) {
+        tagSet.stream().map(Tag::getId).forEach(id ->
+                jdbcTemplate.update("INSERT INTO gift_certificate_system.gift_certificate__tag VALUES (?,?)", giftCertificateId, id));
     }
 
     //TODO fix
