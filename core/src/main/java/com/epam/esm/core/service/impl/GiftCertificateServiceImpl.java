@@ -8,15 +8,17 @@ import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.GiftCertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.var;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @EnableTransactionManagement
@@ -65,11 +67,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         //TODO validate
         Set<Tag> tagSet = giftCertificateDto.getTagSet();
         GiftCertificate requestCertificate = entityDtoConverter.toEntity(giftCertificateDto);
-        Set<Tag> newlyAdded = tagRepository.fetchAndAddNewTags(tagSet);
+        tagSet = tagRepository.fetchAndAddNewTags(tagSet);
         GiftCertificate addedCertificate = giftCertificateRepository.addGiftCertificate(requestCertificate);
+
         giftCertificateRepository.linkTagsToGiftCertificate(addedCertificate.getId(), tagSet);
 
         return entityDtoConverter.toDto(addedCertificate, giftCertificateRepository.
                 getAllTagsForGiftCertificateById(addedCertificate.getId()));
+    }
+
+    @Override
+    @Transactional
+    public GiftCertificateDto updateGiftCertificateFull(GiftCertificateDto giftCertificateDto) {
+        return null;
     }
 }

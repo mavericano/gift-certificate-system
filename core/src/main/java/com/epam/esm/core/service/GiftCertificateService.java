@@ -15,4 +15,6 @@ public interface GiftCertificateService {
     void removeGiftCertificateById(String id);
 
     GiftCertificateDto addGiftCertificate(GiftCertificateDto giftCertificateDto);
+
+    GiftCertificateDto updateGiftCertificateFull(GiftCertificateDto giftCertificateDto);
 }

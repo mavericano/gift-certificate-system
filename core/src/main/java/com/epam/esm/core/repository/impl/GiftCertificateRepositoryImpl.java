@@ -15,6 +15,7 @@ import java.sql.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 @Repository
@@ -62,8 +63,8 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             ps.setString(2, giftCertificate.getDescription());
             ps.setDouble(3, giftCertificate.getPrice());
             ps.setInt(4, giftCertificate.getDuration());
-            ps.setDate(5, new java.sql.Date(giftCertificate.getCreateDate().getTime()));
-            ps.setDate(6, new java.sql.Date(giftCertificate.getLastUpdateDate().getTime()));
+            ps.setObject(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
+            ps.setObject(6, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() != null) {
@@ -78,7 +79,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     @Override
     public void linkTagsToGiftCertificate(long giftCertificateId, Set<Tag> tagSet) {
         tagSet.stream().map(Tag::getId).forEach(id ->
-                jdbcTemplate.update("INSERT INTO gift_certificate_system.gift_certificate__tag VALUES (?,?)", giftCertificateId, id));
+                jdbcTemplate.update("INSERT INTO gift_certificate__tag VALUES (?,?)", giftCertificateId, id));
     }
 
     //TODO fix
@@ -88,4 +89,24 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     }
 
     //TODO add update
+    @Override
+    public GiftCertificate updateGiftCertificateFull(GiftCertificate giftCertificate) {
+        String setExpr = "hi";
+        jdbcTemplate.update("UPDATE gift_certificate SET " +
+                setExpr +
+                " WHERE id = ?");
+        return null;
+    }
+
+    private String buildSetExpression(GiftCertificate giftCertificate) {
+        StringJoiner sj = new StringJoiner(", ");
+        sj.add("name" + "='" + giftCertificate.getName() + "'");
+        sj.add("description" + "='" + giftCertificate.getDescription() + "'");
+        sj.add("price" + "='" + giftCertificate.getPrice() + "'");
+        sj.add("duration" + "='" + giftCertificate.getDuration() + "'");
+        sj.add("create_date" + "='" + giftCertificate.getName() + "'");
+        sj.add("name" + "='" + giftCertificate.getName() + "'");
+
+        return sj.toString();
+    }
 }

@@ -37,6 +37,16 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
+    public Optional<Tag> getTagByName(String name) {
+        try {
+            return Optional.ofNullable(
+                    jdbcTemplate.queryForObject("SELECT * FROM tag WHERE name = ?", new TagRowMapper(), name));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public List<Tag> getAllTags() {
         return jdbcTemplate.query("SELECT * FROM tag", new TagRowMapper());
     }
@@ -73,11 +83,16 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public void removeTagById(long id) {
+        jdbcTemplate.update("DELETE FROM gift_certificate__tag WHERE tag_id = ?", id);
         jdbcTemplate.update("DELETE FROM tag WHERE id = ?", id);
     }
 
     @Override
     public Set<Tag> fetchAndAddNewTags(Set<Tag> tagSet) {
-        return tagSet.stream().filter((tag) -> !getTagById(tag.getId()).isPresent()).map(this::addTag).collect(Collectors.toSet());
+        return tagSet.stream().map(tag ->
+                getTagByName(
+                        tag.getName()).
+                        orElseGet(() -> addTag(tag)))
+                .collect(Collectors.toSet());
     }
 }

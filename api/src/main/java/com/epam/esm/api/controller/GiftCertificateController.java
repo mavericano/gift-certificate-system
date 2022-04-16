@@ -1,10 +1,14 @@
 package com.epam.esm.api.controller;
 
+import com.epam.esm.api.exceptionhandler.BindingResultParser;
 import com.epam.esm.core.dto.GiftCertificateDto;
+import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -12,9 +16,11 @@ import java.util.List;
 public class GiftCertificateController {
 
     final GiftCertificateService giftCertificateService;
+    final BindingResultParser bindingResultParser;
 
-    public GiftCertificateController(GiftCertificateService giftCertificateService) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService, BindingResultParser bindingResultParser) {
         this.giftCertificateService = giftCertificateService;
+        this.bindingResultParser = bindingResultParser;
     }
 
     @GetMapping()
@@ -37,9 +43,18 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto addGiftCertificate(@RequestBody GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.addGiftCertificate(giftCertificateDto);
+    public GiftCertificateDto addGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRecordException("Fields of GiftCertificate has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));
+        } else {
+            return giftCertificateService.addGiftCertificate(giftCertificateDto);
+        }
     }
 
     //TODO add PUT and PATCH
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificateDto updateGiftCertificateFull(@RequestBody GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
+    }
 }

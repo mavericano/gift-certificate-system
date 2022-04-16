@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -17,6 +17,6 @@ public class GiftCertificate {
     private String description;
     private double price;
     private int duration;
-    private Date createDate;
-    private Date lastUpdateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
 }

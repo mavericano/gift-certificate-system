@@ -40,6 +40,7 @@ public class TagServiceImpl implements TagService {
     public void removeTagById(String id) {
         //TODO validate
         long longId = Long.parseLong(id);
+
         tagRepository.removeTagById(longId);
     }
 

@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
 
@@ -16,8 +18,8 @@ public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
         giftCertificate.setDescription(rs.getString("description"));
         giftCertificate.setPrice(rs.getDouble("price"));
         giftCertificate.setDuration(rs.getInt("duration"));
-        giftCertificate.setCreateDate(rs.getDate("create_date"));
-        giftCertificate.setLastUpdateDate(rs.getDate("last_update_date"));
+        giftCertificate.setCreateDate((LocalDateTime) rs.getObject("create_date"));
+        giftCertificate.setLastUpdateDate((LocalDateTime) rs.getObject("last_update_date"));
         return giftCertificate;
     }
 

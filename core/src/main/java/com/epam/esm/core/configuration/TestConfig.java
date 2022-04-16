@@ -2,29 +2,26 @@ package com.epam.esm.core.configuration;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 
+@Profile("test")
 @Configuration
 @ComponentScan(basePackages = "com.epam.esm")
-@PropertySource("classpath:properties/db.properties")
+@PropertySource("classpath:properties/testDb.properties")
 @EnableWebMvc
-public class Config implements WebMvcConfigurer {
+public class TestConfig implements WebMvcConfigurer {
 
     @Value("${driverClass}")
     private String driverClass;
 
-    @Value("${dbuser}")
+    @Value("${dbUser}")
     private String user;
 
     @Value("${password}")

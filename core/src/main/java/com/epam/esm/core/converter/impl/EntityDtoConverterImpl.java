@@ -7,6 +7,7 @@ import com.epam.esm.core.entity.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Component
@@ -26,6 +27,9 @@ public class EntityDtoConverterImpl implements EntityDtoConverter {
 
     @Override
     public GiftCertificate toEntity(GiftCertificateDto giftCertificateDto) {
-        return modelMapper.map(giftCertificateDto, GiftCertificate.class);
+        GiftCertificate giftCertificate = modelMapper.map(giftCertificateDto, GiftCertificate.class);
+        giftCertificate.setCreateDate(LocalDateTime.parse(giftCertificateDto.getCreateDate()));
+        giftCertificate.setLastUpdateDate((LocalDateTime.parse(giftCertificateDto.getLastUpdateDate())));
+        return giftCertificate;
     }
 }

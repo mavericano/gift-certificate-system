@@ -9,6 +9,8 @@ import java.util.Set;
 public interface TagRepository {
     Optional<Tag> getTagById(long id);
 
+    Optional<Tag> getTagByName(String name);
+
     List<Tag> getAllTags();
 
     Tag addTag(Tag tag);
