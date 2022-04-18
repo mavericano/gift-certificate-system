@@ -2,23 +2,21 @@ package com.epam.esm.core.service.impl;
 
 import com.epam.esm.core.converter.EntityDtoConverter;
 import com.epam.esm.core.dto.GiftCertificateDto;
+import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.GiftCertificateService;
-import lombok.var;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @EnableTransactionManagement
@@ -32,6 +30,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         this.tagRepository = tagRepository;
         this.giftCertificateRepository = giftCertificateRepository;
         this.entityDtoConverter = entityDtoConverter;
+    }
+
+    @Override
+    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto) {
+        if ((searchParamsDto.getSortBy() == null) ^ (searchParamsDto.getSortType() == null)) {
+            throw new InvalidRecordException("SortBy and SortType must be specified together");
+        }
+        return giftCertificateRepository.getAllGiftCertificatesByRequirements(searchParamsDto).stream().map((entity) ->
+                entityDtoConverter.toDto(entity, giftCertificateRepository.getAllTagsForGiftCertificateById(entity.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override

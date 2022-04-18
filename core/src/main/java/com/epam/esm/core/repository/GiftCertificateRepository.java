@@ -1,5 +1,6 @@
 package com.epam.esm.core.repository;
 
+import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 
@@ -8,6 +9,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface GiftCertificateRepository {
+
+    List<GiftCertificate> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto);
 
     Set<Tag> getAllTagsForGiftCertificateById(long id);
 

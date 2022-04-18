@@ -1,5 +1,6 @@
 package com.epam.esm.core.repository.impl;
 
+import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.repository.GiftCertificateRepository;
@@ -12,10 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -25,6 +23,49 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     public GiftCertificateRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public List<GiftCertificate> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto) {
+        boolean hasTag = searchParamsDto.getTagName() != null;
+        boolean hasName = searchParamsDto.getName() != null;
+        boolean hasDescription = searchParamsDto.getDescription() != null;
+        boolean hasSort = searchParamsDto.getSortBy() != null;
+        boolean toSearch = hasTag || hasName || hasDescription || hasSort;
+
+        return jdbcTemplate.query((con) -> {
+            String sql = "SELECT DISTINCT gc.* FROM gift_certificate gc JOIN gift_certificate__tag gct ON gc.id = gct.certificate_id JOIN tag t ON gct.tag_id = t.id";
+            if (toSearch) {
+                StringJoiner sj = new StringJoiner(" AND " );
+                sql += " WHERE ";
+                if (hasTag) {
+                    sj.add("t.name = ?");
+                }
+                if (hasName) {
+                    sj.add("gc.name LIKE ?");
+                }
+                if (hasDescription) {
+                    sj.add("gc.description LIKE ?");
+                }
+                sql += sj.toString();
+                if (hasSort) {
+                    sql += "ORDER BY gc." + searchParamsDto.getSortBy() + " " + searchParamsDto.getSortType().toUpperCase();
+                }
+            }
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            int index = 1;
+            if (hasTag) {
+                ps.setString(index++, searchParamsDto.getTagName());
+            }
+            if (hasName) {
+                ps.setString(index++, "%" + searchParamsDto.getName() + "%");
+            }
+            if (hasDescription) {
+                ps.setString(index, "%" + searchParamsDto.getDescription() + "%");
+            }
+            return ps;
+                }, new GiftCertificateRowMapper());
     }
 
     //if no tags for a certificate, produces empty set

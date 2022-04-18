@@ -53,7 +53,6 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Tag addTag(Tag tag) {
-        //TODO validation for unique name
         if (checkIfExistsByName(tag.getName())) {
             throw new DuplicateTagNameException(String.format("Tag with name %s already exists", tag.getName()));
         } else {

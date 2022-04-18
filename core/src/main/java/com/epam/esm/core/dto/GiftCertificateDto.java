@@ -1,8 +1,6 @@
 package com.epam.esm.core.dto;
 
 import com.epam.esm.core.entity.Tag;
-import com.epam.esm.core.serializer.JsonDateToStringSerializer;
-import com.epam.esm.core.serializer.JsonStringToDateDeserializer;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

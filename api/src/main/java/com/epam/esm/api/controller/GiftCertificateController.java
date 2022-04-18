@@ -2,6 +2,8 @@ package com.epam.esm.api.controller;
 
 import com.epam.esm.api.exceptionhandler.BindingResultParser;
 import com.epam.esm.core.dto.GiftCertificateDto;
+import com.epam.esm.core.dto.SearchParamsDto;
+import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,16 @@ public class GiftCertificateController {
     public GiftCertificateController(GiftCertificateService giftCertificateService, BindingResultParser bindingResultParser) {
         this.giftCertificateService = giftCertificateService;
         this.bindingResultParser = bindingResultParser;
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestBody @Valid SearchParamsDto searchParamsDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRecordException("Fields of SearchParams has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));
+        } else {
+            return giftCertificateService.getAllGiftCertificatesByRequirements(searchParamsDto);
+        }
     }
 
     @GetMapping()
