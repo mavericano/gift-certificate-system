@@ -1,9 +1,11 @@
 package com.epam.esm.core.service.impl;
 
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.TagService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +31,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public Tag getTagById(String id) {
-        //TODO validate
-        long longId = Long.parseLong(id);
+        long longId = validateId(id);
         return tagRepository.getTagById(longId).orElseThrow(() ->
                 new NoSuchRecordException(String.format("No tag for id %d", longId)));
     }
@@ -38,9 +39,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void removeTagById(String id) {
-        //TODO validate
-        long longId = Long.parseLong(id);
-
+        long longId = validateId(id);
         tagRepository.removeTagById(longId);
     }
 
@@ -48,5 +47,13 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public Tag addTag(Tag tag) {
         return tagRepository.addTag(tag);
+    }
+
+    private long validateId(String id) {
+        if (StringUtils.isNumeric(id)) {
+            return Long.parseLong(id);
+        } else {
+            throw new InvalidIdException(String.format("Invalid id %s, id should be /d*", id));
+        }
     }
 }

@@ -14,10 +14,12 @@ public interface GiftCertificateService {
 
     GiftCertificateDto getGiftCertificateById(String id);
 
-    @Transactional
     void removeGiftCertificateById(String id);
 
     GiftCertificateDto addGiftCertificate(GiftCertificateDto giftCertificateDto);
 
     GiftCertificateDto updateGiftCertificateFull(GiftCertificateDto giftCertificateDto);
+
+//    @Transactional
+//    GiftCertificateDto updateGiftCertificatePartial(GiftCertificateDto giftCertificateDto);
 }

@@ -100,12 +100,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                     con.prepareStatement(
                             "INSERT INTO gift_certificate(name, description, price, duration, create_date, last_update_date) VALUES (?,?,?,?,?,?)",
                             Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, giftCertificate.getName());
-            ps.setString(2, giftCertificate.getDescription());
-            ps.setDouble(3, giftCertificate.getPrice());
-            ps.setInt(4, giftCertificate.getDuration());
-            ps.setObject(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
-            ps.setObject(6, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+            fillPreparedStatement(ps, giftCertificate);
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() != null) {
@@ -123,31 +118,63 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                 jdbcTemplate.update("INSERT INTO gift_certificate__tag VALUES (?,?)", giftCertificateId, id));
     }
 
+    @Override
+    public void unlinkTagsFromGiftCertificate(long giftCertificateId, Set<Tag> tagSet) {
+        tagSet.stream().map(Tag::getId).forEach(id ->
+                jdbcTemplate.update("DELETE FROM gift_certificate__tag WHERE certificate_id = ? AND tag_id = ?", giftCertificateId, id));
+    }
+
     //TODO fix
     @Override
     public void removeGiftCertificateById(long id) {
+        unlinkTagsFromGiftCertificate(id, getAllTagsForGiftCertificateById(id));
         jdbcTemplate.update("DELETE FROM gift_certificate WHERE id = ?", id);
     }
 
     //TODO add update
     @Override
     public GiftCertificate updateGiftCertificateFull(GiftCertificate giftCertificate) {
-        String setExpr = "hi";
-        jdbcTemplate.update("UPDATE gift_certificate SET " +
-                setExpr +
-                " WHERE id = ?");
-        return null;
+        jdbcTemplate.update((con) -> {
+            String sql = "UPDATE gift_certificate SET ";
+            sql += buildSetExpression();
+            sql += " WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            fillPreparedStatement(ps, giftCertificate);
+            ps.setLong(7, giftCertificate.getId());
+//            TODO remove
+            System.out.println(sql);
+            return ps;
+        });
+
+        return giftCertificate;
     }
 
-    private String buildSetExpression(GiftCertificate giftCertificate) {
+    private void fillPreparedStatement(PreparedStatement ps, GiftCertificate giftCertificate) throws SQLException {
+        ps.setString(1, giftCertificate.getName());
+        ps.setString(2, giftCertificate.getDescription());
+        ps.setDouble(3, giftCertificate.getPrice());
+        ps.setInt(4, giftCertificate.getDuration());
+        ps.setObject(5, Timestamp.valueOf(giftCertificate.getCreateDate()));
+        ps.setObject(6, Timestamp.valueOf(giftCertificate.getLastUpdateDate()));
+    }
+
+    private String buildSetExpression() {
         StringJoiner sj = new StringJoiner(", ");
-        sj.add("name" + "='" + giftCertificate.getName() + "'");
-        sj.add("description" + "='" + giftCertificate.getDescription() + "'");
-        sj.add("price" + "='" + giftCertificate.getPrice() + "'");
-        sj.add("duration" + "='" + giftCertificate.getDuration() + "'");
-        sj.add("create_date" + "='" + giftCertificate.getName() + "'");
-        sj.add("name" + "='" + giftCertificate.getName() + "'");
+        sj.add("name= ?");
+        sj.add("description= ?");
+        sj.add("price= ?");
+        sj.add("duration= ?");
+        sj.add("create_date= ?");
+        sj.add("last_update_date= ?");
 
         return sj.toString();
+    }
+
+    @Override
+    public boolean existsGiftCertificateById(long id) {
+        return jdbcTemplate.query("SELECT count(*) FROM gift_certificate WHERE id = ?", rs -> {
+            rs.next();
+            return rs.getInt(1);
+        }, id) > 0;
     }
 }

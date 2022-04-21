@@ -16,6 +16,7 @@ import java.beans.PropertyVetoException;
 @ComponentScan(basePackages = "com.epam.esm")
 @PropertySource("classpath:properties/db.properties")
 @EnableWebMvc
+@EnableAspectJAutoProxy
 public class ProdConfig implements WebMvcConfigurer {
 
     @Value("${driverClass}")

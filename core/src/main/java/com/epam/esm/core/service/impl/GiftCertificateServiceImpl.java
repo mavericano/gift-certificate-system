@@ -5,11 +5,15 @@ import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.GiftCertificateService;
+
+//import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +57,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto getGiftCertificateById(String id) {
-        //TODO validate
-        long longId = Long.parseLong(id);
+        long longId = validateId(id);
         Set<Tag> tagSet = giftCertificateRepository.getAllTagsForGiftCertificateById(longId);
         return entityDtoConverter.toDto(giftCertificateRepository.getGiftCertificateById(longId).orElseThrow(() ->
                 new NoSuchRecordException(String.format("No gift certificate for id %d", longId))),
@@ -64,8 +67,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void removeGiftCertificateById(String id) {
-        //TODO validate
-        long longId = Long.parseLong(id);
+        long longId = validateId(id);
         giftCertificateRepository.removeGiftCertificateById(longId);
     }
 
@@ -87,6 +89,40 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto updateGiftCertificateFull(GiftCertificateDto giftCertificateDto) {
-        return null;
+        long id = giftCertificateDto.getId();
+        if (giftCertificateRepository.existsGiftCertificateById(id)) {
+            GiftCertificate giftCertificate = entityDtoConverter.toEntity(giftCertificateDto);
+            Set<Tag> tagSet = giftCertificateDto.getTagSet();
+
+            giftCertificateRepository.unlinkTagsFromGiftCertificate(id, tagSet);
+            tagSet = tagRepository.fetchAndAddNewTags(tagSet);
+            giftCertificateRepository.linkTagsToGiftCertificate(id, tagSet);
+
+            return entityDtoConverter.toDto(giftCertificateRepository.updateGiftCertificateFull(giftCertificate), tagSet);
+        } else {
+            throw new InvalidRecordException(String.format("No GiftCertificate for id %d", id));
+        }
+    }
+
+//    @Override
+//    @Transactional
+//    public GiftCertificateDto updateGiftCertificatePartial(GiftCertificateDto giftCertificateDto) {
+//        long id = giftCertificateDto.getId();
+//        if (giftCertificateRepository.existsGiftCertificateById(id)) {
+//            GiftCertificate giftCertificate = entityDtoConverter.toEntity(giftCertificateDto);
+//            Set<Tag> tagSet = giftCertificateDto.getTagSet();
+//
+//            return null;
+//        } else {
+//            throw new InvalidRecordException(String.format("No GiftCertificate for id %d", id));
+//        }
+//    }
+
+    private long validateId(String id) {
+        if (StringUtils.isNumeric(id)) {
+            return Long.parseLong(id);
+        } else {
+            throw new InvalidIdException(String.format("Invalid id %s, id should be /d*", id));
+        }
     }
 }

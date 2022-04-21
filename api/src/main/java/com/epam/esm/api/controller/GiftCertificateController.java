@@ -66,7 +66,13 @@ public class GiftCertificateController {
     //TODO add PUT and PATCH
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto updateGiftCertificateFull(@RequestBody GiftCertificateDto giftCertificateDto) {
+    public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
     }
+
+//    @PatchMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public GiftCertificateDto updateGiftCertificatePartial(@RequestBody GiftCertificateDto giftCertificateDto) {
+//        return giftCertificateService.updateGiftCertificatePartial(giftCertificateDto);
+//    }
 }
