@@ -1,0 +1,1 @@
+INSERT INTO gift_certificate(name, description, price, duration, create_date, last_update_date) VALUES ('Unlimited candy supply', 'This certificate provides unlimited candy supply to the owner and owner only!', 50, 3, '2018-08-29T06:12:12', '2018-08-29T06:12:12')

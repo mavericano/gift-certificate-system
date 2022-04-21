@@ -63,11 +63,14 @@ public class GiftCertificateController {
         }
     }
 
-    //TODO add PUT and PATCH
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
+    public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new InvalidRecordException("Fields of GiftCertificate has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));
+        } else {
+            return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
+        }
     }
 
 //    @PatchMapping

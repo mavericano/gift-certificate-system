@@ -141,8 +141,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             PreparedStatement ps = con.prepareStatement(sql);
             fillPreparedStatement(ps, giftCertificate);
             ps.setLong(7, giftCertificate.getId());
-//            TODO remove
-            System.out.println(sql);
             return ps;
         });
 
