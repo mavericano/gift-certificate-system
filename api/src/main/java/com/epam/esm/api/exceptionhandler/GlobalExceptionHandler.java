@@ -43,9 +43,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ExceptionInfo> handleLeftoverException(Exception exception) {
-//        ExceptionInfo info = new ExceptionInfo(HttpStatus.INTERNAL_SERVER_ERROR, 50001, exception.getMessage());
-//        return new ResponseEntity<>(info, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionInfo> handleLeftoverException(Exception exception) {
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.INTERNAL_SERVER_ERROR, 50001, exception.getMessage());
+        return new ResponseEntity<>(info, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

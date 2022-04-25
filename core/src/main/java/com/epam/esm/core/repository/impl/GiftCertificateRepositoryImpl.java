@@ -106,7 +106,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (keyHolder.getKey() != null) {
             giftCertificate.setId(keyHolder.getKey().longValue());
         } else {
-            //TODO consider changing
             throw new RuntimeException("Unable to retrieve id for added GiftCertificate");
         }
         return giftCertificate;
@@ -124,14 +123,12 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
                 jdbcTemplate.update("DELETE FROM gift_certificate__tag WHERE certificate_id = ? AND tag_id = ?", giftCertificateId, id));
     }
 
-    //TODO fix
     @Override
     public void removeGiftCertificateById(long id) {
         unlinkTagsFromGiftCertificate(id, getAllTagsForGiftCertificateById(id));
         jdbcTemplate.update("DELETE FROM gift_certificate WHERE id = ?", id);
     }
-
-    //TODO add update
+    
     @Override
     public GiftCertificate updateGiftCertificateFull(GiftCertificate giftCertificate) {
         jdbcTemplate.update((con) -> {

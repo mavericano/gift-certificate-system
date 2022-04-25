@@ -2,7 +2,6 @@ package com.epam.esm.api.integration;
 
 import com.epam.esm.api.integration.config.IntegrationTestConfig;
 import com.epam.esm.core.configuration.WebInitializer;
-import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static com.epam.esm.api.integration.util.JsonUtils.toJson;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

@@ -74,7 +74,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDto addGiftCertificate(GiftCertificateDto giftCertificateDto) {
-        //TODO validate
         Set<Tag> tagSet = giftCertificateDto.getTagSet();
         GiftCertificate requestCertificate = entityDtoConverter.toEntity(giftCertificateDto);
         tagSet = tagRepository.fetchAndAddNewTags(tagSet);

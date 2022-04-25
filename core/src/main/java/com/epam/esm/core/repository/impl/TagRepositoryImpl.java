@@ -66,7 +66,6 @@ public class TagRepositoryImpl implements TagRepository {
             if (keyHolder.getKey() != null) {
                 tag.setId(keyHolder.getKey().longValue());
             } else {
-                //TODO consider changing
                 throw new RuntimeException("Unable to retrieve id for added GiftCertificate");
             }
         }

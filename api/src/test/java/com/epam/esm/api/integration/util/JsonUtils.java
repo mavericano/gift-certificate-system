@@ -22,9 +22,4 @@ public class JsonUtils {
         return new ObjectMapper().readValue(jsonString, returned);
     }
 
-    public static String parseTagSet(Set<Tag> tagSet) {
-        StringJoiner sj = new StringJoiner(",", "[", "]");
-        tagSet.stream().map((tag) -> String.format("{\"id\":%d,\"name\":\"%s\"}", tag.getId(), tag.getName())).forEach(sj::add);
-        return sj.toString();
-    }
 }
