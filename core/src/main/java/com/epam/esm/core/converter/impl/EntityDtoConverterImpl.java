@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Component
 public class EntityDtoConverterImpl implements EntityDtoConverter {
+
     private final ModelMapper modelMapper;
 
     public EntityDtoConverterImpl() {

@@ -26,12 +26,8 @@ public class GiftCertificateController {
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestBody @Valid SearchParamsDto searchParamsDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidRecordException("Fields of SearchParams has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));
-        } else {
-            return giftCertificateService.getAllGiftCertificatesByRequirements(searchParamsDto);
-        }
+    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestBody @Valid SearchParamsDto searchParamsDto) {
+        return giftCertificateService.getAllGiftCertificatesByRequirements(searchParamsDto);
     }
 
     @GetMapping()
@@ -52,22 +48,14 @@ public class GiftCertificateController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public GiftCertificateDto addGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidRecordException("Fields of GiftCertificate has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));
-        } else {
-            return giftCertificateService.addGiftCertificate(giftCertificateDto);
-        }
+    public GiftCertificateDto addGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.addGiftCertificate(giftCertificateDto);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new InvalidRecordException("Fields of GiftCertificate has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));
-        } else {
-            return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
-        }
+    public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
     }
 
 //    @PatchMapping
