@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/gift-certificates")
+@RequestMapping("/api/v1/gift-certificates")
 public class GiftCertificateController {
 
     final GiftCertificateService giftCertificateService;
@@ -35,13 +35,11 @@ public class GiftCertificateController {
     }
 
     @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
     public List<GiftCertificateDto> getAllGiftCertificates() {
         return giftCertificateService.getAllGiftCertificates();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto getGiftCertificateById(@PathVariable String id) {
         return giftCertificateService.getGiftCertificateById(id);
     }
@@ -53,7 +51,7 @@ public class GiftCertificateController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto addGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InvalidRecordException("Fields of GiftCertificate has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult));

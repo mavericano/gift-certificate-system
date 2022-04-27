@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Transactional
 public class GiftCertificateIntegrationTest {
-    public static final String CERTIFICATES_ENDPOINT = "/api/gift-certificates";
+    public static final String CERTIFICATES_ENDPOINT = "/api/v1/gift-certificates";
 
     private final WebApplicationContext webAppContext;
     private MockMvc mvc;

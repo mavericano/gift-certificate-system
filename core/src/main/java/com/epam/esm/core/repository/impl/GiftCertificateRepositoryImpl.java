@@ -3,6 +3,7 @@ package com.epam.esm.core.repository.impl;
 import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.exception.KeyHolderException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.mapper.GiftCertificateRowMapper;
 import com.epam.esm.core.repository.mapper.TagRowMapper;
@@ -106,7 +107,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (keyHolder.getKey() != null) {
             giftCertificate.setId(keyHolder.getKey().longValue());
         } else {
-            throw new RuntimeException("Unable to retrieve id for added GiftCertificate");
+            throw new KeyHolderException("Unable to retrieve id for added GiftCertificate");
         }
         return giftCertificate;
     }

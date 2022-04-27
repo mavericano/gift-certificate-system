@@ -2,6 +2,7 @@ package com.epam.esm.core.repository.impl;
 
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.DuplicateTagNameException;
+import com.epam.esm.core.exception.KeyHolderException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.repository.mapper.TagRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -66,7 +67,7 @@ public class TagRepositoryImpl implements TagRepository {
             if (keyHolder.getKey() != null) {
                 tag.setId(keyHolder.getKey().longValue());
             } else {
-                throw new RuntimeException("Unable to retrieve id for added GiftCertificate");
+                throw new KeyHolderException("Unable to retrieve id for added GiftCertificate");
             }
         }
         return tag;

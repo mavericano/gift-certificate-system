@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tags")
+@RequestMapping("/api/v1/tags")
 public class TagController {
 
     final TagService tagService;
@@ -18,13 +18,11 @@ public class TagController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<Tag> getAllTags() {
         return tagService.getAllTags();
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public Tag getTagById(@PathVariable String id) {
         return tagService.getTagById(id);
     }
@@ -36,7 +34,7 @@ public class TagController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public Tag addTag(@RequestBody Tag tag) {
         return tagService.addTag(tag);
     }
