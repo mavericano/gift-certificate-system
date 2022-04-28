@@ -5,7 +5,6 @@ import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,31 +26,31 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoSuchRecordException.class)
     public ResponseEntity<ExceptionInfo> handleNoSuchRecordException(NoSuchRecordException exception) {
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.NOT_FOUND, 40401, exception.getMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.NOT_FOUND, 40401, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateTagNameException.class)
     public ResponseEntity<ExceptionInfo> handleDuplicateTagNameException(DuplicateTagNameException exception) {
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.CONFLICT, 40901, exception.getMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.CONFLICT, 40901, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidRecordException.class)
     public ResponseEntity<ExceptionInfo> handleInvalidRecordException(InvalidRecordException exception) {
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(JsonMappingException.class)
     public ResponseEntity<ExceptionInfo> handleJsonMappingException(JsonMappingException exception) {
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidIdException.class)
     public ResponseEntity<ExceptionInfo> handleInvalidIdException(InvalidIdException exception){
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
@@ -66,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionInfo> handleLeftoverException(Exception exception) {
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.INTERNAL_SERVER_ERROR, 50001, exception.getMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.INTERNAL_SERVER_ERROR, 50001, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

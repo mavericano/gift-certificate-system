@@ -107,7 +107,7 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (keyHolder.getKey() != null) {
             giftCertificate.setId(keyHolder.getKey().longValue());
         } else {
-            throw new KeyHolderException("Unable to retrieve id for added GiftCertificate");
+            throw new KeyHolderException();
         }
         return giftCertificate;
     }

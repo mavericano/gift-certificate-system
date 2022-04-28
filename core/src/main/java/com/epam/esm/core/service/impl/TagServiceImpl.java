@@ -6,6 +6,7 @@ import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.TagService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,12 @@ import java.util.List;
 @EnableTransactionManagement
 public class TagServiceImpl implements TagService {
 
+    final ApplicationContext applicationContext;
     final TagRepository tagRepository;
 
-    public TagServiceImpl(TagRepository tagRepository) {
+    public TagServiceImpl(TagRepository tagRepository, ApplicationContext applicationContext) {
         this.tagRepository = tagRepository;
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -53,7 +56,10 @@ public class TagServiceImpl implements TagService {
         if (StringUtils.isNumeric(id)) {
             return Long.parseLong(id);
         } else {
-            throw new InvalidIdException(String.format("Invalid id %s, id should be /d*", id));
+//            String msg = applicationContext.getMessage("invalidIdMessage", new Object[]{id}, Locale.US);
+//            System.out.println(msg);
+            throw new InvalidIdException();
+//            throw new InvalidIdException(String.format("Invalid id %s, id should be /d*", id));
         }
     }
 }

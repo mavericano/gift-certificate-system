@@ -1,12 +1,21 @@
 package com.epam.esm.core.exception;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 public class InvalidRecordException extends RuntimeException {
+    private String messageKey;
+
+    @Override
+    public String getLocalizedMessage() {
+        return ExceptionMessageHandler.getMessage(messageKey, LocaleContextHolder.getLocale());
+    }
+
     public InvalidRecordException() {
         super();
     }
 
-    public InvalidRecordException(String message) {
-        super(message);
+    public InvalidRecordException(String messageKey) {
+        this.messageKey = messageKey;
     }
 
     public InvalidRecordException(String message, Throwable cause) {

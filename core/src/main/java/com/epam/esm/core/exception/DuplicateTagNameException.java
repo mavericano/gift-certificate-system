@@ -1,6 +1,15 @@
 package com.epam.esm.core.exception;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 public class DuplicateTagNameException extends RuntimeException {
+    private final String messageKey = "duplicateTagNameExceptionMessage";
+
+    @Override
+    public String getLocalizedMessage() {
+        return ExceptionMessageHandler.getMessage(messageKey, LocaleContextHolder.getLocale());
+    }
+
     public DuplicateTagNameException() {
         super();
     }

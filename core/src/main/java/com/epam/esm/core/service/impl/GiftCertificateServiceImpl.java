@@ -39,7 +39,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto) {
         if ((searchParamsDto.getSortBy() == null) ^ (searchParamsDto.getSortType() == null)) {
-            throw new InvalidRecordException("SortBy and SortType must be specified together");
+            throw new InvalidRecordException("searchInvalidRecordExceptionMessage");
         }
         return giftCertificateRepository.getAllGiftCertificatesByRequirements(searchParamsDto).stream().map((entity) ->
                 entityDtoConverter.toDto(entity, giftCertificateRepository.getAllTagsForGiftCertificateById(entity.getId())))
@@ -99,7 +99,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
             return entityDtoConverter.toDto(giftCertificateRepository.updateGiftCertificateFull(giftCertificate), tagSet);
         } else {
-            throw new InvalidRecordException(String.format("No GiftCertificate for id %d", id));
+            throw new InvalidRecordException("updateInvalidRecordExceptionMessage");
         }
     }
 
@@ -121,7 +121,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (StringUtils.isNumeric(id)) {
             return Long.parseLong(id);
         } else {
-            throw new InvalidIdException(String.format("Invalid id %s, id should be /d*", id));
+            throw new InvalidIdException();
         }
     }
 }

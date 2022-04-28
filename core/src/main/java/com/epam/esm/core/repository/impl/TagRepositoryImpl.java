@@ -55,7 +55,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Tag addTag(Tag tag) {
         if (checkIfExistsByName(tag.getName())) {
-            throw new DuplicateTagNameException(String.format("Tag with name %s already exists", tag.getName()));
+            throw new DuplicateTagNameException();
         } else {
             KeyHolder keyHolder = new GeneratedKeyHolder();
             jdbcTemplate.update(con -> {
@@ -67,7 +67,7 @@ public class TagRepositoryImpl implements TagRepository {
             if (keyHolder.getKey() != null) {
                 tag.setId(keyHolder.getKey().longValue());
             } else {
-                throw new KeyHolderException("Unable to retrieve id for added GiftCertificate");
+                throw new KeyHolderException();
             }
         }
         return tag;

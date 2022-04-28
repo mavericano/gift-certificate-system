@@ -1,6 +1,15 @@
 package com.epam.esm.core.exception;
 
+import org.springframework.context.i18n.LocaleContextHolder;
+
 public class InvalidIdException extends RuntimeException {
+    private final String messageKey = "invalidIdExceptionMessage";
+
+    @Override
+    public String getLocalizedMessage() {
+        return ExceptionMessageHandler.getMessage(messageKey, LocaleContextHolder.getLocale());
+    }
+
     public InvalidIdException() {
         super();
     }
