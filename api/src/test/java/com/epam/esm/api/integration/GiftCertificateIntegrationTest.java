@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,7 +63,7 @@ public class GiftCertificateIntegrationTest {
                 .name("Unlimited candy supply")
                 .description("This certificate provides unlimited candy supply to the owner and owner only!")
                 .duration(3)
-                .price(50)
+                .price(new BigDecimal(50))
                 .createDate("2018-08-29T06:12:12")
                 .lastUpdateDate("2018-08-29T06:12:12")
                 .tagSet(tagSet)
@@ -90,7 +91,7 @@ public class GiftCertificateIntegrationTest {
                 .andExpect(jsonPath("$.name").value(giftCertificateDto.getName()))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
                 .andExpect(jsonPath("$.duration").value(giftCertificateDto.getDuration()))
-                .andExpect(jsonPath("$.price").value(giftCertificateDto.getPrice()))
+                .andExpect(jsonPath("$.price").value(giftCertificateDto.getPrice().doubleValue()))
                 .andExpect(jsonPath("$.createDate").value(giftCertificateDto.getCreateDate()))
                 .andExpect(jsonPath("$.lastUpdateDate").value(giftCertificateDto.getLastUpdateDate()));
     }
@@ -184,13 +185,5 @@ public class GiftCertificateIntegrationTest {
         mvc.perform(get(CERTIFICATES_ENDPOINT + "/search").content(toJson(searchParamsDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray());
-//                .andExpect(jsonPath("$.[0].id").value(giftCertificateDto.getId()))
-//                .andExpect(jsonPath("$.[0].name").value(giftCertificateDto.getName()))
-//                .andExpect(jsonPath("$.[0].description").value(giftCertificateDto.getDescription()))
-//                .andExpect(jsonPath("$.[0].duration").value(giftCertificateDto.getDuration()))
-//                .andExpect(jsonPath("$.[0].price").value(giftCertificateDto.getPrice()))
-//                .andExpect(jsonPath("$.[0].createDate").value(giftCertificateDto.getCreateDate()))
-//                .andExpect(jsonPath("$.[0].lastUpdateDate").value(giftCertificateDto.getLastUpdateDate()))
-//                .andExpect(jsonPath("$.[0].tagSet").isNotEmpty());
     }
 }

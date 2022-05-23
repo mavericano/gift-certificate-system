@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,6 +21,7 @@ import java.util.Locale;
 @ComponentScan(basePackages = "com.epam.esm")
 @PropertySource("classpath:properties/testDb.properties")
 @EnableWebMvc
+@EnableTransactionManagement
 @EnableAspectJAutoProxy
 public class TestConfig implements WebMvcConfigurer {
 
@@ -60,11 +62,11 @@ public class TestConfig implements WebMvcConfigurer {
         return new DataSourceTransactionManager(dataSource);
     }
 
-    @Bean
-    public LocaleResolver localeResolver() {
-        final AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
-        resolver.setSupportedLocales(Arrays.asList(new Locale("ru"), new Locale("en")));
-        resolver.setDefaultLocale(new Locale("en"));
-        return resolver;
-    }
+//    @Bean
+//    public LocaleResolver localeResolver() {
+//        final AcceptHeaderLocaleResolver resolver = new AcceptHeaderLocaleResolver();
+//        resolver.setSupportedLocales(Arrays.asList(new Locale("ru"), new Locale("en")));
+//        resolver.setDefaultLocale(new Locale("en"));
+//        return resolver;
+//    }
 }

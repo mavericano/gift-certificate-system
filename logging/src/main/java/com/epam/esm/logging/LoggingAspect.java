@@ -24,8 +24,8 @@ public class LoggingAspect {
 
     @AfterReturning("execution(* com.epam.esm.api.exceptionhandler.GlobalExceptionHandler.*(..))")
     public void logAfterGlobalExceptionHandlerAdvice(JoinPoint joinPoint) {
-        log.debug(joinPoint.getArgs()[0].toString());
-        log.debug(joinPoint.getSignature().getName() + " method was called from GlobalExceptionHandler");
+        log.error(joinPoint.getArgs()[0].toString());
+        log.error(joinPoint.getSignature().getName() + " method was called from GlobalExceptionHandler");
     }
 
     @AfterReturning("execution(* com.epam.esm.api.exceptionhandler.GlobalExceptionHandler.handleLeftoverException(..))")

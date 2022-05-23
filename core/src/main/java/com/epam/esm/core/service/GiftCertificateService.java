@@ -5,6 +5,8 @@ import com.epam.esm.core.dto.SearchParamsDto;
 
 import java.util.List;
 
+//TODO https://github.com/mjc-school/mentors-handsbook/tree/master/modules
+
 public interface GiftCertificateService {
     /**
      * Retrieves all certificates corresponding to search parameters
@@ -45,7 +47,4 @@ public interface GiftCertificateService {
      * @return certificate, identical to the one in the data source
      */
     GiftCertificateDto updateGiftCertificateFull(GiftCertificateDto giftCertificateDto);
-
-//    @Transactional
-//    GiftCertificateDto updateGiftCertificatePartial(GiftCertificateDto giftCertificateDto);
 }

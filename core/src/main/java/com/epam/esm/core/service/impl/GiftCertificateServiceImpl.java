@@ -12,7 +12,6 @@ import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.GiftCertificateService;
 
-//import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -102,20 +101,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new InvalidRecordException("updateInvalidRecordExceptionMessage");
         }
     }
-
-//    @Override
-//    @Transactional
-//    public GiftCertificateDto updateGiftCertificatePartial(GiftCertificateDto giftCertificateDto) {
-//        long id = giftCertificateDto.getId();
-//        if (giftCertificateRepository.existsGiftCertificateById(id)) {
-//            GiftCertificate giftCertificate = entityDtoConverter.toEntity(giftCertificateDto);
-//            Set<Tag> tagSet = giftCertificateDto.getTagSet();
-//
-//            return null;
-//        } else {
-//            throw new InvalidRecordException(String.format("No GiftCertificate for id %d", id));
-//        }
-//    }
 
     private long validateId(String id) {
         if (StringUtils.isNumeric(id)) {

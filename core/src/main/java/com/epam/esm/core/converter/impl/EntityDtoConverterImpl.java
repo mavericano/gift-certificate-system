@@ -29,8 +29,8 @@ public class EntityDtoConverterImpl implements EntityDtoConverter {
     @Override
     public GiftCertificate toEntity(GiftCertificateDto giftCertificateDto) {
         GiftCertificate giftCertificate = modelMapper.map(giftCertificateDto, GiftCertificate.class);
-        giftCertificate.setCreateDate(LocalDateTime.parse(giftCertificateDto.getCreateDate()));
-        giftCertificate.setLastUpdateDate((LocalDateTime.parse(giftCertificateDto.getLastUpdateDate())));
+//        giftCertificate.setCreateDate(LocalDateTime.now());
+//        giftCertificate.setLastUpdateDate(LocalDateTime.now());
         return giftCertificate;
     }
 }

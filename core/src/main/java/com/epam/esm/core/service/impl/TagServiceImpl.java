@@ -56,10 +56,7 @@ public class TagServiceImpl implements TagService {
         if (StringUtils.isNumeric(id)) {
             return Long.parseLong(id);
         } else {
-//            String msg = applicationContext.getMessage("invalidIdMessage", new Object[]{id}, Locale.US);
-//            System.out.println(msg);
             throw new InvalidIdException();
-//            throw new InvalidIdException(String.format("Invalid id %s, id should be /d*", id));
         }
     }
 }
