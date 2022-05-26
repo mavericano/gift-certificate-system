@@ -6,6 +6,8 @@ import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.TagService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -17,18 +19,21 @@ import java.util.List;
 @EnableTransactionManagement
 public class TagServiceImpl implements TagService {
 
-    final ApplicationContext applicationContext;
+    //final ApplicationContext applicationContext;
+
     final TagRepository tagRepository;
 
-    public TagServiceImpl(TagRepository tagRepository, ApplicationContext applicationContext) {
+    public TagServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository) {
         this.tagRepository = tagRepository;
-        this.applicationContext = applicationContext;
+        //this.applicationContext = applicationContext;
     }
 
     @Override
     @Transactional
     public List<Tag> getAllTags() {
-        return tagRepository.getAllTags();
+        List<Tag> tags = tagRepository.getAllTags();
+        //System.out.println(tags);
+        return tags;
     }
 
     @Override

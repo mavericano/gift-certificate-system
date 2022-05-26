@@ -23,7 +23,6 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
     public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestBody @Valid SearchParamsDto searchParamsDto) {
         return giftCertificateService.getAllGiftCertificatesByRequirements(searchParamsDto);
     }
@@ -55,4 +54,10 @@ public class GiftCertificateController {
     public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
     }
+    //TODO implement
+//    @PatchMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public GiftCertificateDto updateGiftCertificateSingleField() {
+//        return null;
+//    }
 }

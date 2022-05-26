@@ -13,6 +13,7 @@ import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.GiftCertificateService;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +26,16 @@ import java.util.stream.Collectors;
 @EnableTransactionManagement
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
-    final TagRepository tagRepository;
+    @Qualifier("giftCertificateRepositoryImpl")
     final GiftCertificateRepository giftCertificateRepository;
+
+    @Qualifier("tagRepositoryImpl")
+    final TagRepository tagRepository;
     final EntityDtoConverter entityDtoConverter;
 
-    public GiftCertificateServiceImpl(TagRepository tagRepository, GiftCertificateRepository giftCertificateRepository, EntityDtoConverter entityDtoConverter) {
+    public GiftCertificateServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository,
+                                      @Qualifier("giftCertificateRepositoryHibernateImpl") GiftCertificateRepository giftCertificateRepository,
+                                      EntityDtoConverter entityDtoConverter) {
         this.tagRepository = tagRepository;
         this.giftCertificateRepository = giftCertificateRepository;
         this.entityDtoConverter = entityDtoConverter;
