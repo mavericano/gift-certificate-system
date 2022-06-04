@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/gift-certificates")
@@ -23,8 +24,12 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/search")
-    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestBody @Valid SearchParamsDto searchParamsDto) {
-        return giftCertificateService.getAllGiftCertificatesByRequirements(searchParamsDto);
+    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestParam(required = false) String tagName,
+                                                                         @RequestParam(required = false) String sortBy,
+                                                                         @RequestParam(required = false) String sortType,
+                                                                         @RequestParam(required = false) String name,
+                                                                         @RequestParam(required = false) String description) {
+        return giftCertificateService.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType);
     }
 
     @GetMapping()
@@ -49,15 +54,17 @@ public class GiftCertificateController {
         return giftCertificateService.addGiftCertificate(giftCertificateDto);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public GiftCertificateDto updateGiftCertificateFull(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.updateGiftCertificateFull(giftCertificateDto);
+    public GiftCertificateDto updateGiftCertificateFull(@PathVariable String id,
+                                                        @RequestBody @Valid GiftCertificateDto giftCertificateDto) {
+        return giftCertificateService.updateGiftCertificateFull(id, giftCertificateDto);
     }
     //TODO implement
-//    @PatchMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    public GiftCertificateDto updateGiftCertificateSingleField() {
-//        return null;
-//    }
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public GiftCertificateDto updateGiftCertificatePartially(@PathVariable String id,
+                                                             @RequestBody Map<String, Object> updates) {
+        return giftCertificateService.updateGiftCertificatePartially(id, updates);
+    }
 }

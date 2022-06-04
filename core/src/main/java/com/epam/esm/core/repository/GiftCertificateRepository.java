@@ -14,7 +14,8 @@ public interface GiftCertificateRepository {
      * @param searchParamsDto parameters of the search
      * @return List of certificates corresponding to the parameters
      */
-    List<GiftCertificate> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto);
+    //List<GiftCertificate> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto);
+    List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType);
 
     Set<Tag> getAllTagsForGiftCertificateById(long id);
 
