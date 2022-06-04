@@ -1,6 +1,8 @@
 package com.epam.esm.core.dto;
 
 import com.epam.esm.core.entity.Tag;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,5 +44,6 @@ public class GiftCertificateDto {
 //    @Pattern(regexp = "^\\d{4}-(0[1-9]|1[0-2])-([12]\\d|0[1-9]|3[01])([T\\s](([01]\\d|2[0-3]):[0-5]\\d|24:00)(:[0-5]\\d([.,]\\d+)?)?([zZ]|([+-])([01]\\d|2[0-3]):?([0-5]\\d)?)?)?$", message = "Last update date should be in format yyyy-MM-dd HH:mm:ss")
     private String lastUpdateDate;
 
-    private Set<Tag> tagSet;
+//    @JsonManagedReference
+    private Set<TagDto> tagSet;
 }

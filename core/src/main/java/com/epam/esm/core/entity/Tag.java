@@ -27,12 +27,12 @@ public class Tag {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable( name = "gift_certificate__tag",
         joinColumns = @JoinColumn(name = "tag_id"),
         inverseJoinColumns = @JoinColumn(name = "certificate_id")
     )
-    @JsonBackReference
+    //@JsonBackReference
     private List<GiftCertificate> certificates;
 
     public Tag(long id, String name) {

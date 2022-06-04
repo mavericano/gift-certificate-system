@@ -4,16 +4,21 @@ import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.dto.SearchParamsDto;
 
 import java.util.List;
+import java.util.Map;
 
 //TODO https://github.com/mjc-school/mentors-handsbook/tree/master/modules
 
 public interface GiftCertificateService {
     /**
      * Retrieves all certificates corresponding to search parameters
-     * @param searchParamsDto parameters of the search
+     * @param tagName name of the tag
+     * @param name part of the name of the certificate
+     * @param description part of the description of the certificate
+     * @param sortBy field to sort by
+     * @param sortType type of sorting
      * @return List of certificates corresponding to the parameters
      */
-    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto);
+    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType);
 
     /**
      * Retrieves all certificates
@@ -43,8 +48,17 @@ public interface GiftCertificateService {
 
     /**
      * Updates a certificate
+     * @param id id of a certificate to update
      * @param giftCertificateDto certificate containing new values
      * @return certificate, identical to the one in the data source
      */
-    GiftCertificateDto updateGiftCertificateFull(GiftCertificateDto giftCertificateDto);
+    GiftCertificateDto updateGiftCertificateFull(String id, GiftCertificateDto giftCertificateDto);
+
+    /**
+     * Updates a certificate
+     * @param id id of a certificate to update
+     * @param updates map containing pairs <fieldName, newValue>
+     * @return certificate, identical to the one in the data source
+     */
+    GiftCertificateDto updateGiftCertificatePartially(String id, Map<String, Object> updates);
 }

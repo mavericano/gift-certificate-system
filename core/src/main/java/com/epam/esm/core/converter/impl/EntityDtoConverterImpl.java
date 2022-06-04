@@ -2,6 +2,7 @@ package com.epam.esm.core.converter.impl;
 
 import com.epam.esm.core.converter.EntityDtoConverter;
 import com.epam.esm.core.dto.GiftCertificateDto;
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 import org.modelmapper.ModelMapper;
@@ -22,7 +23,7 @@ public class EntityDtoConverterImpl implements EntityDtoConverter {
     @Override
     public GiftCertificateDto toDto(GiftCertificate giftCertificate, Set<Tag> tagSet) {
         GiftCertificateDto giftCertificateDto = modelMapper.map(giftCertificate, GiftCertificateDto.class);
-        giftCertificateDto.setTagSet(tagSet);
+//        giftCertificateDto.setTagSet(tagSet);
         return giftCertificateDto;
     }
 

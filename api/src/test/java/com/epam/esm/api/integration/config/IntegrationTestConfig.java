@@ -1,6 +1,5 @@
 package com.epam.esm.api.integration.config;
 
-import com.epam.esm.core.configuration.TestConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
@@ -11,7 +10,7 @@ import org.springframework.validation.beanvalidation.MethodValidationPostProcess
 import javax.sql.DataSource;
 
 @PropertySource("classpath:properties/integration.properties")
-public class IntegrationTestConfig extends TestConfig {
+public class IntegrationTestConfig {
 
 //    @Value("${dbScript}")
     @Value("classpath:scripts/schema.sql")
@@ -22,7 +21,6 @@ public class IntegrationTestConfig extends TestConfig {
     private String dbName;
 
     @Bean
-    @Override
     public DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)

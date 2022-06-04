@@ -1,5 +1,7 @@
 package com.epam.esm.core.service.impl;
 
+import com.epam.esm.core.converter.TagMapper;
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.NoSuchRecordException;
@@ -14,9 +16,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-@EnableTransactionManagement
+@Transactional
 public class TagServiceImpl implements TagService {
 
     //final ApplicationContext applicationContext;
@@ -29,32 +32,30 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional
-    public List<Tag> getAllTags() {
+    public List<TagDto> getAllTags() {
         List<Tag> tags = tagRepository.getAllTags();
         //System.out.println(tags);
-        return tags;
+        return tags.stream().map(TagMapper.INSTANCE::tagToTagDto).collect(Collectors.toList());
     }
 
     @Override
-    @Transactional
-    public Tag getTagById(String id) {
+    public TagDto getTagById(String id) {
         long longId = validateId(id);
-        return tagRepository.getTagById(longId).orElseThrow(() ->
-                new NoSuchRecordException(String.format("No tag for id %d", longId)));
+        return TagMapper.INSTANCE.tagToTagDto(
+                tagRepository.getTagById(longId).orElseThrow(() ->
+                new NoSuchRecordException(String.format("No tag for id %d", longId)))
+        );
     }
 
     @Override
-    @Transactional
     public void removeTagById(String id) {
         long longId = validateId(id);
         tagRepository.removeTagById(longId);
     }
 
     @Override
-    @Transactional
-    public Tag addTag(Tag tag) {
-        return tagRepository.addTag(tag);
+    public TagDto addTag(TagDto tag) {
+        return TagMapper.INSTANCE.tagToTagDto(tagRepository.addTag(TagMapper.INSTANCE.tagDtoToTag(tag)));
     }
 
     private long validateId(String id) {
