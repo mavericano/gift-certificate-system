@@ -1,20 +1,27 @@
 package com.epam.esm.api.integration;
 
+import com.epam.esm.api.Application;
 import com.epam.esm.api.exceptionhandler.GlobalExceptionHandler;
 import com.epam.esm.api.integration.config.IntegrationTestConfig;
-import com.epam.esm.core.configuration.WebInitializer;
 import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.dto.SearchParamsDto;
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -31,11 +38,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
+//@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
 @WebAppConfiguration
+@AutoConfigureMockMvc
+//@EnableAutoConfiguration
 @Sql(scripts = {"classpath:scripts/init_gift_certificate.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Transactional
+@SpringBootTest(
+        classes = Application.class)
+//@TestPropertySource(locations = "classpath:testApplication.properties")
+//@RunWith(SpringRunner.class)
+@Import(IntegrationTestConfig.class)
 public class GiftCertificateIntegrationTest {
     public static final String CERTIFICATES_ENDPOINT = "/api/v1/gift-certificates";
 
@@ -55,9 +68,9 @@ public class GiftCertificateIntegrationTest {
 
     @BeforeEach
     public void init() {
-        Set<Tag> tagSet = new HashSet<>();
-        tagSet.add(new Tag(2, "candy"));
-        tagSet.add(new Tag(1, "food"));
+        Set<TagDto> tagSet = new HashSet<>();
+        tagSet.add(TagDto.builder().id(2).name("candy").build());
+        tagSet.add(TagDto.builder().id(1).name("food").build());
         giftCertificateDto = GiftCertificateDto.builder()
                 .id(1)
                 .name("Unlimited candy supply")
@@ -91,9 +104,9 @@ public class GiftCertificateIntegrationTest {
                 .andExpect(jsonPath("$.name").value(giftCertificateDto.getName()))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
                 .andExpect(jsonPath("$.duration").value(giftCertificateDto.getDuration()))
-                .andExpect(jsonPath("$.price").value(giftCertificateDto.getPrice().doubleValue()))
-                .andExpect(jsonPath("$.createDate").value(giftCertificateDto.getCreateDate()))
-                .andExpect(jsonPath("$.lastUpdateDate").value(giftCertificateDto.getLastUpdateDate()));
+                .andExpect(jsonPath("$.price").value(giftCertificateDto.getPrice().doubleValue()));
+//                .andExpect(jsonPath("$.createDate").value(giftCertificateDto.getCreateDate()))
+//                .andExpect(jsonPath("$.lastUpdateDate").value(giftCertificateDto.getLastUpdateDate()));
     }
 
     @Test
@@ -134,13 +147,13 @@ public class GiftCertificateIntegrationTest {
     @Test
     public void shouldReturnBadRequestIfPutWithInvalidBody() throws Exception {
         giftCertificateDto.setName("");
-        mvc.perform(put(CERTIFICATES_ENDPOINT).content(toJson(giftCertificateDto)).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(put(CERTIFICATES_ENDPOINT + "/{id}", 1).content(toJson(giftCertificateDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void shouldReturnCorrectJsonIfPutWithValidBody() throws Exception {
-        mvc.perform(put(CERTIFICATES_ENDPOINT).content(toJson(giftCertificateDto)).contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(put(CERTIFICATES_ENDPOINT + "/{id}", 1).content(toJson(giftCertificateDto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId()))
                 .andExpect(jsonPath("$.name").value(giftCertificateDto.getName()))
@@ -173,18 +186,15 @@ public class GiftCertificateIntegrationTest {
     }
 
     @Test
-    public void shouldReturnBadRequestIfSearchWithWrongBody() throws Exception {
-        SearchParamsDto searchParamsDto = new SearchParamsDto();
-        searchParamsDto.setSortType("abc");
-        mvc.perform(get(CERTIFICATES_ENDPOINT + "/search").content(toJson(searchParamsDto)).contentType(MediaType.APPLICATION_JSON))
+    public void shouldReturnBadRequestIfSearchWithWrongParams() throws Exception {
+        mvc.perform(get(CERTIFICATES_ENDPOINT + "/search?sortBy=name"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void shouldReturnCorrectJsonIfSearchWithCorrectBody() throws Exception {
-        SearchParamsDto searchParamsDto = new SearchParamsDto();
-        searchParamsDto.setName("candy");
-        mvc.perform(get(CERTIFICATES_ENDPOINT + "/search").content(toJson(searchParamsDto)).contentType(MediaType.APPLICATION_JSON))
+    public void shouldReturnCorrectJsonIfSearchWithCorrectParams() throws Exception {
+        mvc.perform(get(CERTIFICATES_ENDPOINT + "/search?name=candy"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray());
     }

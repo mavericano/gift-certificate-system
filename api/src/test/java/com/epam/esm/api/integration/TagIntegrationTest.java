@@ -1,12 +1,16 @@
 package com.epam.esm.api.integration;
 
+import com.epam.esm.api.Application;
 import com.epam.esm.api.integration.config.IntegrationTestConfig;
-import com.epam.esm.core.configuration.WebInitializer;
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -23,19 +27,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
+//@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
 @WebAppConfiguration
+@AutoConfigureMockMvc
 @Sql(scripts = {"classpath:scripts/init_tag.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@Transactional
+@SpringBootTest(
+        classes = Application.class)
+@Import(IntegrationTestConfig.class)
 public class TagIntegrationTest {
     public static final String TAGS_ENDPOINT = "/api/v1/tags";
 
     private final WebApplicationContext webAppContext;
     private MockMvc mvc;
-    private Tag tag;
+    private TagDto tag;
 
-    @Autowired
     public TagIntegrationTest(WebApplicationContext webAppContext) {
         this.webAppContext = webAppContext;
     }
@@ -47,7 +53,7 @@ public class TagIntegrationTest {
 
     @BeforeEach
     public void init() {
-        tag = Tag.builder()
+        tag = TagDto.builder()
                 .id(1)
                 .name("candy")
                 .build();

@@ -2,11 +2,13 @@ package com.epam.esm.core.repository.impl;
 
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.entity.User;
+import com.epam.esm.core.exception.DuplicateTagNameException;
 import com.epam.esm.core.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -33,7 +35,13 @@ public class TagRepositoryHibernateImpl implements TagRepository {
     public Optional<Tag> getTagByName(String name) {
         TypedQuery<Tag> query = entityManager.createQuery("select tag from Tag tag where tag.name=:name", Tag.class);
         query.setParameter("name", name);
-        return Optional.ofNullable(query.getSingleResult());
+        Tag tag;
+        try {
+            tag = query.getSingleResult();
+        } catch (NoResultException e) {
+            tag = null;
+        }
+        return Optional.ofNullable(tag);
     }
 
     @Override
@@ -44,8 +52,13 @@ public class TagRepositoryHibernateImpl implements TagRepository {
 
     @Override
     public Tag addTag(Tag tag) {
-        entityManager.persist(tag);
-        return tag;
+        if (getTagByName(tag.getName()).isPresent()) {
+            throw new DuplicateTagNameException();
+        } else {
+            tag.setId(0);
+            entityManager.persist(tag);
+            return tag;
+        }
     }
 
     @Override
