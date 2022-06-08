@@ -118,6 +118,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     @Override
     public GiftCertificateDto updateGiftCertificatePartially(String id, Map<String, Object> updates) {
+        if (updates == null) {
+            //TODO add msg
+            throw new InvalidRecordException("updateInvalidRecordExceptionMessage");
+        }
         long longId = validateId(id);
         Optional<GiftCertificate> giftCertificate = giftCertificateRepository.getGiftCertificateById(longId);
         if (giftCertificate.isPresent()) {
@@ -133,6 +137,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             });
             return GiftCertificateMapper.INSTANCE.certificateToCertificateDto(giftCertificateRepository.updateGiftCertificateFull(giftCertificate.get()));
         } else {
+//            TODO fix msg
             throw new InvalidRecordException("updateInvalidRecordExceptionMessage");
         }
     }
