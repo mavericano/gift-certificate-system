@@ -60,11 +60,11 @@ public class GiftCertificateController {
                                                         @RequestBody @Valid GiftCertificateDto giftCertificateDto) {
         return giftCertificateService.updateGiftCertificateFull(id, giftCertificateDto);
     }
-    //TODO implement
+
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto updateGiftCertificatePartially(@PathVariable String id,
-                                                             @RequestBody Map<String, Object> updates) {
+                                                             @RequestBody(required = false) Map<String, Object> updates) {
         return giftCertificateService.updateGiftCertificatePartially(id, updates);
     }
 }

@@ -25,7 +25,6 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
 
     @Override
     public List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType) {
-//        TODO Criteria API
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);

@@ -44,13 +44,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(JsonMappingException.class)
     public ResponseEntity<ExceptionInfo> handleJsonMappingException(JsonMappingException exception) {
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getLocalizedMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40002, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(InvalidIdException.class)
     public ResponseEntity<ExceptionInfo> handleInvalidIdException(InvalidIdException exception){
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, exception.getLocalizedMessage());
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40003, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
         BindingResult bindingResult =  ex.getBindingResult();
         String message = "Fields of request dto has errors: " + bindingResultParser.getFieldErrMismatches(bindingResult);
-        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40001, message);
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40004, message);
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
