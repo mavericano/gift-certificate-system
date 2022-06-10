@@ -1,6 +1,5 @@
 package com.epam.esm.core.repository;
 
-import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 

@@ -2,7 +2,6 @@ package com.epam.esm.api.controller;
 
 import com.epam.esm.api.exceptionhandler.BindingResultParser;
 import com.epam.esm.core.dto.GiftCertificateDto;
-import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
