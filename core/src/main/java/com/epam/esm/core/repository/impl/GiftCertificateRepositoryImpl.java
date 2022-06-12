@@ -1,22 +1,6 @@
 package com.epam.esm.core.repository.impl;
 
-import com.epam.esm.core.dto.SearchParamsDto;
-import com.epam.esm.core.entity.GiftCertificate;
-import com.epam.esm.core.entity.Tag;
-import com.epam.esm.core.exception.KeyHolderException;
-import com.epam.esm.core.repository.GiftCertificateRepository;
-import com.epam.esm.core.repository.mapper.GiftCertificateRowMapper;
-import com.epam.esm.core.repository.mapper.TagRowMapper;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 public class GiftCertificateRepositoryImpl

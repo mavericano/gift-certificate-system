@@ -4,28 +4,21 @@ import com.epam.esm.api.Application;
 import com.epam.esm.api.exceptionhandler.GlobalExceptionHandler;
 import com.epam.esm.api.integration.config.IntegrationTestConfig;
 import com.epam.esm.core.dto.GiftCertificateDto;
-import com.epam.esm.core.dto.SearchParamsDto;
 import com.epam.esm.core.dto.TagDto;
-import com.epam.esm.core.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
@@ -202,14 +195,13 @@ public class GiftCertificateIntegrationTest {
     @Test
     public void shouldReturnUpdatedJsonIfPatchWithValidBody() throws Exception {
         String newName = "Limited candy supply";
-        mvc.perform(patch(CERTIFICATES_ENDPOINT + "/{id}", 1).content("\"name\"=\"" + newName + "\"").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(patch(CERTIFICATES_ENDPOINT + "/{id}", 1).content("{\"name\":\"" + newName + "\"}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId()))
                 .andExpect(jsonPath("$.name").value(newName))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
-                .andExpect(jsonPath("$.duration").value(giftCertificateDto.getDuration()))
-                .andExpect(jsonPath("$.price").value(giftCertificateDto.getPrice()));
+                .andExpect(jsonPath("$.duration").value(giftCertificateDto.getDuration()));
     }
 
     @Test

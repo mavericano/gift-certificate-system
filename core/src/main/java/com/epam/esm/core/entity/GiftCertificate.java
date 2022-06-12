@@ -48,8 +48,15 @@ public class GiftCertificate {
             joinColumns = @JoinColumn(name = "certificate_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id")
     )
-    //@JsonManagedReference
     private Set<Tag> tagSet = new java.util.LinkedHashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "order__certificate",
+            joinColumns = @JoinColumn(name = "certificate_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "order_id")
+    )
+    private List<Order> orders;
 
     public GiftCertificate(long id, String name, String description, BigDecimal price, int duration, LocalDateTime createDate, LocalDateTime lastUpdateDate) {
         this.id = id;

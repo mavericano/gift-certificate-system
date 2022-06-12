@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -129,6 +130,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 Field field = ReflectionUtils.findField(GiftCertificate.class, key);
                 if (field != null) {
                     field.setAccessible(true);
+                    if ("price".equals(key)) {
+                        value = (value instanceof Integer) ? BigDecimal.valueOf((int) value) : BigDecimal.valueOf((double) value);
+                    }
                     ReflectionUtils.setField(field, giftCertificate.get(), value);
                 } else {
 //                    TODO add

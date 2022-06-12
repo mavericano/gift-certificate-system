@@ -1,7 +1,6 @@
 package com.epam.esm.core.service;
 
 import com.epam.esm.core.dto.GiftCertificateDto;
-import com.epam.esm.core.dto.SearchParamsDto;
 
 import java.util.List;
 import java.util.Map;
