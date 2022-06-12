@@ -195,14 +195,13 @@ public class GiftCertificateIntegrationTest {
     @Test
     public void shouldReturnUpdatedJsonIfPatchWithValidBody() throws Exception {
         String newName = "Limited candy supply";
-        mvc.perform(patch(CERTIFICATES_ENDPOINT + "/{id}", 1).content("\"name\"=\"" + newName + "\"").contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(patch(CERTIFICATES_ENDPOINT + "/{id}", 1).content("{\"name\":\"" + newName + "\"}").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId()))
                 .andExpect(jsonPath("$.name").value(newName))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
-                .andExpect(jsonPath("$.duration").value(giftCertificateDto.getDuration()))
-                .andExpect(jsonPath("$.price").value(giftCertificateDto.getPrice()));
+                .andExpect(jsonPath("$.duration").value(giftCertificateDto.getDuration()));
     }
 
     @Test

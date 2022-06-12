@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public class OrderRepositoryHibernateImpl implements OrderRepository {
@@ -22,5 +23,10 @@ public class OrderRepositoryHibernateImpl implements OrderRepository {
         order.setPurchaseTime(now);
         entityManager.persist(order);
         return order;
+    }
+
+    @Override
+    public Optional<Order> getOrderById(long id) {
+        return Optional.ofNullable(entityManager.find(Order.class, id));
     }
 }

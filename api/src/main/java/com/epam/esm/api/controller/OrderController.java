@@ -25,4 +25,9 @@ public class OrderController {
     public OrderDto placeOrder(@RequestBody @Valid OrderRequestDto orderRequestDto) {
         return orderService.placeOrder(orderRequestDto);
     }
+
+    @GetMapping("/{id}")
+    public OrderDto getOrderById(@PathVariable String id) {
+        return orderService.getOrderById(id);
+    }
 }

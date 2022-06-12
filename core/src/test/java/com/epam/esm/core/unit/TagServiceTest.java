@@ -1,5 +1,6 @@
 package com.epam.esm.core.unit;
 
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.NoSuchRecordException;
@@ -28,15 +29,16 @@ public class TagServiceTest {
 
     @Test
     public void shouldReturnTagIfExistsById() {
-        Tag tag = new Tag();
-        tag.setId(1);
-        tag.setName("candy");
+        long id = 1;
+        String name = "candy";
+        TagDto tagDto = TagDto.builder().id(id).name(name).build();
+        Tag tag = Tag.builder().id(id).name(name).build();
 
-        when(tagRepository.getTagById(1)).thenReturn(Optional.of(tag));
+        when(tagRepository.getTagById(id)).thenReturn(Optional.of(tag));
 
-        Assertions.assertEquals(tag, tagService.getTagById(String.valueOf(1)));
+        Assertions.assertEquals(tagDto, tagService.getTagById(String.valueOf(id)));
 
-        verify(tagRepository).getTagById(1);
+        verify(tagRepository).getTagById(id);
     }
 
     @Test
@@ -63,13 +65,15 @@ public class TagServiceTest {
 
     @Test
     public void shouldAddTag() {
-        Tag tag = new Tag();
-        tag.setId(1);
-        tag.setName("candy");
+        long id = 1;
+        String name = "candy";
+        TagDto tagDto = TagDto.builder().id(id).name(name).build();
+        Tag tag = Tag.builder().id(id).name(name).build();
+
 
         when(tagRepository.addTag(tag)).thenReturn(tag);
-//FIXME
-        //Assertions.assertEquals(tag, tagService.addTag(tag));
+
+        Assertions.assertEquals(tagDto, tagService.addTag(tagDto));
 
         verify(tagRepository).addTag(tag);
     }

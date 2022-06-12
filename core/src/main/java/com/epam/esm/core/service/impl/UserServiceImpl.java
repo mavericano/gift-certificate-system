@@ -35,13 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> userList = userRepository.getAllUsers();
-
-        return userRepository.getAllUsers().stream().map(entity -> {
-            UserDto dto = UserMapper.INSTANCE.userToUserDto(entity);
-//            dto.setOrders(entity.getOrders().stream().map(OrderMapper.INSTANCE::orderToOrderDto).collect(Collectors.toList()));
-            return dto;
-        }).collect(Collectors.toList());
+        return userRepository.getAllUsers().stream().map(UserMapper.INSTANCE::userToUserDto).collect(Collectors.toList());
     }
 
     @Override

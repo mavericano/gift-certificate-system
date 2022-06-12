@@ -22,4 +22,9 @@ public class TagDto {
 
     @JsonIgnore
     private List<GiftCertificateDto> certificates;
+
+    public TagDto(long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
