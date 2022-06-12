@@ -22,13 +22,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class TagServiceImpl implements TagService {
 
-    //final ApplicationContext applicationContext;
-
     final TagRepository tagRepository;
 
     public TagServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository) {
         this.tagRepository = tagRepository;
-        //this.applicationContext = applicationContext;
     }
 
     @Override

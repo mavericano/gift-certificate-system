@@ -1,6 +1,7 @@
 package com.epam.esm.api.controller;
 
 import com.epam.esm.core.dto.OrderDto;
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.service.UserService;
@@ -32,5 +33,10 @@ public class UserController {
     @GetMapping("/{id}/orders")
     public List<OrderDto> getOrdersForUserById(@PathVariable String id) {
         return userService.getOrdersForUserById(id);
+    }
+
+    @GetMapping("/{id}/top-tag")
+    public TagDto getTopTagForUserById(@PathVariable String id) {
+        return userService.getTopTagForUserById(id);
     }
 }
