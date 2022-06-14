@@ -10,7 +10,7 @@ public interface TagService {
      * Retrieves all tags
      * @return List containing all tags
      */
-    List<TagDto> getAllTags();
+    List<TagDto> getAllTags(int page, int size);
 
     /**
      * Retrieves a tag by id

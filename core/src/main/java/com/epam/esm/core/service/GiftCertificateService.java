@@ -5,8 +5,6 @@ import com.epam.esm.core.dto.GiftCertificateDto;
 import java.util.List;
 import java.util.Map;
 
-//TODO https://github.com/mjc-school/mentors-handsbook/tree/master/modules
-
 public interface GiftCertificateService {
     /**
      * Retrieves all certificates corresponding to search parameters

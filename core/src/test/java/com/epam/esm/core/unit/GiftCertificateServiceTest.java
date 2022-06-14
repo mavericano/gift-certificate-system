@@ -26,8 +26,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class GiftCertificateServiceTest {
 
-//    TODO fix tests
-
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
 
