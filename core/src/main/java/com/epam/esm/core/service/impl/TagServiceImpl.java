@@ -4,6 +4,7 @@ import com.epam.esm.core.converter.TagMapper;
 import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.InvalidIdException;
+import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.TagService;
@@ -32,9 +33,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDto> getAllTags() {
-        List<Tag> tags = tagRepository.getAllTags();
-        //System.out.println(tags);
+    public List<TagDto> getAllTags(int page, int size) {
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+
+        List<Tag> tags = tagRepository.getAllTags(page, size);
         return tags.stream().map(TagMapper.INSTANCE::tagToTagDto).collect(Collectors.toList());
     }
 

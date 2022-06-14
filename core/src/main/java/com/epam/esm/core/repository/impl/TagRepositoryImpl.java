@@ -48,7 +48,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> getAllTags() {
+    public List<Tag> getAllTags(int page, int size) {
         return jdbcTemplate.query("SELECT * FROM tag", new TagRowMapper());
     }
 

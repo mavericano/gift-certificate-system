@@ -1,9 +1,6 @@
 package com.epam.esm.api.exceptionhandler;
 
-import com.epam.esm.core.exception.DuplicateTagNameException;
-import com.epam.esm.core.exception.InvalidIdException;
-import com.epam.esm.core.exception.InvalidRecordException;
-import com.epam.esm.core.exception.NoSuchRecordException;
+import com.epam.esm.core.exception.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,6 +48,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidIdException.class)
     public ResponseEntity<ExceptionInfo> handleInvalidIdException(InvalidIdException exception){
         ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40003, exception.getLocalizedMessage());
+        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidPageSizeException.class)
+    public ResponseEntity<ExceptionInfo> handleInvalidPageSizeException(InvalidPageSizeException exception){
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40005, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
