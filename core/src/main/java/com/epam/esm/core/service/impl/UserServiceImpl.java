@@ -4,8 +4,10 @@ import com.epam.esm.core.converter.OrderMapper;
 import com.epam.esm.core.converter.UserMapper;
 import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.UserDto;
+import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
+import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.UserService;
@@ -25,15 +27,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<OrderDto> getOrdersForUserById(String id) {
+    public List<OrderDto> getOrdersForUserById(String id, int page, int size) {
         long longId = validateId(id);
-        return userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new)
-                .getOrders().stream().map(OrderMapper.INSTANCE::orderToOrderDto).collect(Collectors.toList());
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+
+        List<Order> orders = userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new).getOrders();
+        int lastPageNumber = (int) Math.ceil((double)orders.size() / size);
+        lastPageNumber = lastPageNumber == 0 ? 1 : lastPageNumber;
+        if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
+
+        return orders.stream().skip((long) (page - 1) * size).limit(size).map(OrderMapper.INSTANCE::orderToOrderDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.getAllUsers().stream().map(UserMapper.INSTANCE::userToUserDto).collect(Collectors.toList());
+    public List<UserDto> getAllUsers(int page, int size) {
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+
+        return userRepository.getAllUsers(page, size).stream().map(UserMapper.INSTANCE::userToUserDto).collect(Collectors.toList());
     }
 
     @Override
