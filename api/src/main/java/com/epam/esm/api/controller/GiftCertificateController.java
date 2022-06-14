@@ -4,11 +4,15 @@ import com.epam.esm.api.exceptionhandler.BindingResultParser;
 import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/v1/gift-certificates")
@@ -28,42 +32,55 @@ public class GiftCertificateController {
                                                                          @RequestParam(required = false) String sortType,
                                                                          @RequestParam(required = false) String name,
                                                                          @RequestParam(required = false) String description) {
-        return giftCertificateService.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType);
+        return giftCertificateService.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
     }
 
     @GetMapping()
     public List<GiftCertificateDto> getAllGiftCertificates() {
-        return giftCertificateService.getAllGiftCertificates();
+        return giftCertificateService.getAllGiftCertificates().stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
     public GiftCertificateDto getGiftCertificateById(@PathVariable String id) {
-        return giftCertificateService.getGiftCertificateById(id);
+        return addLinksToGiftCertificate(giftCertificateService.getGiftCertificateById(id));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeGiftCertificateById(@PathVariable String id) {
+    public ResponseEntity<Void> removeGiftCertificateById(@PathVariable String id) {
         giftCertificateService.removeGiftCertificateById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDto addGiftCertificate(@RequestBody @Valid GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.addGiftCertificate(giftCertificateDto);
+        return addLinksToGiftCertificate(giftCertificateService.addGiftCertificate(giftCertificateDto));
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto updateGiftCertificateFull(@PathVariable String id,
                                                         @RequestBody @Valid GiftCertificateDto giftCertificateDto) {
-        return giftCertificateService.updateGiftCertificateFull(id, giftCertificateDto);
+        return addLinksToGiftCertificate(giftCertificateService.updateGiftCertificateFull(id, giftCertificateDto));
     }
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public GiftCertificateDto updateGiftCertificatePartially(@PathVariable String id,
                                                              @RequestBody(required = false) Map<String, Object> updates) {
-        return giftCertificateService.updateGiftCertificatePartially(id, updates);
+        return addLinksToGiftCertificate(giftCertificateService.updateGiftCertificatePartially(id, updates));
+    }
+
+    private GiftCertificateDto addLinksToGiftCertificate(GiftCertificateDto giftCertificateDto) {
+        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+                        .getGiftCertificateById(String.valueOf(giftCertificateDto.getId()))).withSelfRel());
+        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+                        .removeGiftCertificateById(String.valueOf(giftCertificateDto.getId()))).withRel("delete"));
+        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+                        .updateGiftCertificateFull(String.valueOf(giftCertificateDto.getId()), giftCertificateDto)).withRel("update"));
+        giftCertificateDto.add(linkTo(methodOn(GiftCertificateController.class)
+                        .updateGiftCertificatePartially(String.valueOf(giftCertificateDto.getId()), null)).withRel("patch"));
+        return giftCertificateDto;
     }
 }

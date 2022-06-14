@@ -3,12 +3,12 @@ package com.epam.esm.api.controller;
 import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.OrderRequestDto;
 import com.epam.esm.core.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -29,5 +29,11 @@ public class OrderController {
     @GetMapping("/{id}")
     public OrderDto getOrderById(@PathVariable String id) {
         return orderService.getOrderById(id);
+    }
+
+    protected OrderDto addLinksToOrder(OrderDto orderDto) {
+        orderDto.add(linkTo(methodOn(OrderController.class)
+                        .getOrderById(String.valueOf(orderDto.getOrderId()))).withSelfRel());
+        return orderDto;
     }
 }
