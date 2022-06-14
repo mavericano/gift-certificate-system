@@ -7,6 +7,7 @@ import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.InvalidIdException;
+import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
@@ -42,19 +43,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType) {
-        if ((sortBy == null) ^ (sortType == null)) {
-            throw new InvalidRecordException("searchInvalidRecordExceptionMessage");
-        }
-        return giftCertificateRepository.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType).stream().map(GiftCertificateMapper.INSTANCE::certificateToCertificateDto)
+    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size) {
+        if ((sortBy == null) ^ (sortType == null)) throw new InvalidRecordException("searchInvalidRecordExceptionMessage");
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+        return giftCertificateRepository.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType, page, size).stream().map(GiftCertificateMapper.INSTANCE::certificateToCertificateDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<GiftCertificateDto> getAllGiftCertificates() {
-        return giftCertificateRepository.getAllGiftCertificates().stream().map(GiftCertificateMapper.INSTANCE::certificateToCertificateDto
-                //entityDtoConverter.toDto(entity, giftCertificateRepository.getAllTagsForGiftCertificateById(entity.getId()))
-                )
+    public List<GiftCertificateDto> getAllGiftCertificates(int page, int size) {
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+        return giftCertificateRepository.getAllGiftCertificates(page, size).stream().map(GiftCertificateMapper.INSTANCE::certificateToCertificateDto)
                 .collect(Collectors.toList());
     }
 
