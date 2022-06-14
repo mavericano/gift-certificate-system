@@ -27,9 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<OrderDto> getOrdersForUserById(String id) {
         long longId = validateId(id);
-        return userRepository.getUserById(longId).orElseThrow(() ->
-//                TODO add exception message i18n
-                new NoSuchRecordException(String.format("No user for id %d", longId)))
+        return userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new)
                 .getOrders().stream().map(OrderMapper.INSTANCE::orderToOrderDto).collect(Collectors.toList());
     }
 
@@ -41,9 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(String id) {
         long longId = validateId(id);
-        return UserMapper.INSTANCE.userToUserDto(userRepository.getUserById(longId).orElseThrow(() ->
-//                TODO add exception message i18n
-                        new NoSuchRecordException(String.format("No user for id %d", longId))));
+        return UserMapper.INSTANCE.userToUserDto(userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new));
     }
 
     private long validateId(String id) {

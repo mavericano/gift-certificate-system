@@ -36,14 +36,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto placeOrder(OrderRequestDto orderRequestDto) {
-        User customer = userRepository.getUserById(orderRequestDto.getCustomerId()).orElseThrow(() ->
-//                TODO exception message
-                new NoSuchRecordException());
-        List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id -> {
-            return giftCertificateRepository.getGiftCertificateById(id).orElseThrow(() ->
-//                TODO exception message
-                    new NoSuchRecordException());
-        }).collect(Collectors.toList());
+        User customer = userRepository.getUserById(orderRequestDto.getCustomerId()).orElseThrow(NoSuchRecordException::new);
+        List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id ->
+                giftCertificateRepository.getGiftCertificateById(id).orElseThrow(NoSuchRecordException::new)).collect(Collectors.toList());
         BigDecimal finalPrice = certificates.stream().map(GiftCertificate::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
         Order order = Order.builder().customer(customer).certificates(certificates).finalPrice(finalPrice).build();
         return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.addOrder(order));
@@ -52,9 +47,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto getOrderById(String id) {
         long longId = validateId(id);
-        return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.getOrderById(longId).orElseThrow(() ->
-//                TODO exception message
-                new NoSuchRecordException()));
+        return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.getOrderById(longId).orElseThrow(NoSuchRecordException::new));
     }
 
     private long validateId(String id) {
