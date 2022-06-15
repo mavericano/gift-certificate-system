@@ -4,7 +4,6 @@ import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidPageSizeException;
-import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import org.springframework.stereotype.Repository;
 
@@ -42,7 +41,8 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
             try {
                 criteriaQuery.orderBy(sortType.equalsIgnoreCase("ASC") ? criteriaBuilder.asc(root.get(sortBy)) : criteriaBuilder.desc(root.get(sortBy)));
             } catch (IllegalArgumentException e) {
-                throw new InvalidSortParamsException("sortByNotFoundExceptionMessage");
+//                FIXME add custom exception
+                throw new RuntimeException("Invalid sortBy field");
             }
         }
 
@@ -85,7 +85,8 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
             try {
                 criteriaQuery.orderBy(sortType.equalsIgnoreCase("ASC") ? criteriaBuilder.asc(root.get(sortBy)) : criteriaBuilder.desc(root.get(sortBy)));
             } catch (IllegalArgumentException e) {
-                throw new InvalidSortParamsException("sortByNotFoundExceptionMessage");
+//                FIXME add custom exception
+                throw new RuntimeException("sortBy is not valid");
             }
             query = entityManager.createQuery(criteriaQuery);
         } else {
@@ -99,6 +100,7 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
     @Override
     public GiftCertificate addGiftCertificate(GiftCertificate giftCertificate) {
         giftCertificate.setId(0);
+        //giftCertificate.getTagSet().forEach(tag -> tag.setId(0));
         LocalDateTime now = LocalDateTime.now();
         giftCertificate.setCreateDate(now);
         giftCertificate.setLastUpdateDate(now);
