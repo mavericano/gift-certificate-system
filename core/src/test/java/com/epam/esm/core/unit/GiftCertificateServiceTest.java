@@ -26,8 +26,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class GiftCertificateServiceTest {
 
-//    TODO fix tests
-
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
 
@@ -92,11 +90,11 @@ public class GiftCertificateServiceTest {
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setTagSet(new HashSet<>());
         giftCertificateDto.setName("Unlimited candy supply");
-        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(null, "candy suppl", null, null, null)).thenReturn(Collections.singletonList(giftCertificate));
+        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(null, "candy suppl", null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
 
-        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(null, "candy suppl", null, null, null).get(0));
+        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(null, "candy suppl", null, null, null, 1, 1).get(0));
 
-        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(null, "candy suppl", null, null, null);
+        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(null, "candy suppl", null, null, null, 1, 1);
     }
 
     @Test
@@ -107,11 +105,11 @@ public class GiftCertificateServiceTest {
         giftCertificateDto.setTagSet(new HashSet<>());
         giftCertificateDto.setDescription("This certificate provides unlimited candy supply to the owner and owner only!");
 
-        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(null, null, "candy suppl", null, null)).thenReturn(Collections.singletonList(giftCertificate));
+        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(null, null, "candy suppl", null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
 
-        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(null, null, "candy suppl", null, null).get(0));
+        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(null, null, "candy suppl", null, null, 1, 1).get(0));
 
-        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(null, null, "candy suppl", null, null);
+        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(null, null, "candy suppl", null, null, 1, 1);
     }
 
     @Test
@@ -128,11 +126,11 @@ public class GiftCertificateServiceTest {
         tagDtoSet.add(new TagDto(1, "candy"));
         giftCertificateDto.setTagSet(tagDtoSet);
 
-        when(giftCertificateRepository.getAllGiftCertificatesByRequirements("candy", null, null, null, null)).thenReturn(Collections.singletonList(giftCertificate));
+        when(giftCertificateRepository.getAllGiftCertificatesByRequirements("candy", null, null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
 
-        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements("candy", null, null, null, null).get(0));
+        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements("candy", null, null, null, null, 1, 1).get(0));
 
-        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements("candy", null, null, null, null);
+        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements("candy", null, null, null, null, 1, 1);
     }
 
     @Test
@@ -159,12 +157,12 @@ public class GiftCertificateServiceTest {
 
     @Test
     public void shouldThrowExceptionIfOnlySortTypeSpecified() {
-        Assertions.assertThrows(InvalidRecordException.class, () -> giftCertificateService.getAllGiftCertificatesByRequirements(null, null, null, null, "name"));
+        Assertions.assertThrows(InvalidRecordException.class, () -> giftCertificateService.getAllGiftCertificatesByRequirements(null, null, null, null, "name", 1, 1));
     }
 
     @Test
     public void shouldThrowExceptionIfOnlySortOrderSpecified() {
-        Assertions.assertThrows(InvalidRecordException.class, () -> giftCertificateService.getAllGiftCertificatesByRequirements(null, null, null,  "asc", null));
+        Assertions.assertThrows(InvalidRecordException.class, () -> giftCertificateService.getAllGiftCertificatesByRequirements(null, null, null,  "asc", null, 1, 1));
     }
 
     @Test

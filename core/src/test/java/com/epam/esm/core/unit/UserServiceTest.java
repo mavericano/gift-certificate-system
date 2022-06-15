@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-
+//TODO fix tests
     @Mock
     private UserRepository userRepository;
 
@@ -64,20 +64,20 @@ public class UserServiceTest {
 
     @Test
     public void shouldReturnEmptyListIfRepositoryIsEmpty(){
-        when(userRepository.getAllUsers()).thenReturn(new ArrayList<>());
+        when(userRepository.getAllUsers(1, 1)).thenReturn(new ArrayList<>());
 
-        Assertions.assertTrue(userService.getAllUsers().isEmpty());
+        Assertions.assertTrue(userService.getAllUsers(1, 1).isEmpty());
 
-        verify(userRepository).getAllUsers();
+        verify(userRepository).getAllUsers(1, 1);
     }
 
     @Test
     public void shouldReturnNonEmptyListIfRepositoryIsNonEmpty() {
-        when(userRepository.getAllUsers()).thenReturn(Arrays.asList(new User(), new User()));
+        when(userRepository.getAllUsers(1, 2)).thenReturn(Arrays.asList(new User(), new User()));
 
-        Assertions.assertFalse(userService.getAllUsers().isEmpty());
+        Assertions.assertFalse(userService.getAllUsers(1, 2).isEmpty());
 
-        verify(userRepository).getAllUsers();
+        verify(userRepository).getAllUsers(1, 2);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class UserServiceTest {
         User user = User.builder().id(id).orders(new ArrayList<>()).build();
         when(userRepository.getUserById(id)).thenReturn(Optional.of(user));
 
-        Assertions.assertTrue(userService.getOrdersForUserById(String.valueOf(id)).isEmpty());
+        Assertions.assertTrue(userService.getOrdersForUserById(String.valueOf(id), 1, 1).isEmpty());
 
         verify(userRepository).getUserById(id);
     }
@@ -97,7 +97,7 @@ public class UserServiceTest {
         User user = User.builder().id(id).orders(new ArrayList<>(Arrays.asList(new Order(), new Order()))).build();
         when(userRepository.getUserById(id)).thenReturn(Optional.of(user));
 
-        Assertions.assertFalse(userService.getOrdersForUserById(String.valueOf(id)).isEmpty());
+        Assertions.assertFalse(userService.getOrdersForUserById(String.valueOf(id), 1, 1).isEmpty());
 
         verify(userRepository).getUserById(id);
     }
@@ -107,7 +107,7 @@ public class UserServiceTest {
         long id = 1;
         when(userRepository.getUserById(id)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NoSuchRecordException.class, () -> userService.getOrdersForUserById(String.valueOf(id)));
+        Assertions.assertThrows(NoSuchRecordException.class, () -> userService.getOrdersForUserById(String.valueOf(id), 1, 1));
 
         verify(userRepository).getUserById(id);
     }

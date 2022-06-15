@@ -56,11 +56,11 @@ public class TagServiceTest {
 
     @Test
     public void shouldReturnEmptyListIfRepositoryIsEmpty(){
-        when(tagRepository.getAllTags()).thenReturn(new ArrayList<>());
+        when(tagRepository.getAllTags(1, 1)).thenReturn(new ArrayList<>());
 
-        Assertions.assertTrue(tagService.getAllTags().isEmpty());
+        Assertions.assertTrue(tagService.getAllTags(1, 1).isEmpty());
 
-        verify(tagRepository).getAllTags();
+        verify(tagRepository).getAllTags(1, 1);
     }
 
     @Test

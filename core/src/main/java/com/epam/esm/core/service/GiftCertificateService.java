@@ -5,8 +5,6 @@ import com.epam.esm.core.dto.GiftCertificateDto;
 import java.util.List;
 import java.util.Map;
 
-//TODO https://github.com/mjc-school/mentors-handsbook/tree/master/modules
-
 public interface GiftCertificateService {
     /**
      * Retrieves all certificates corresponding to search parameters
@@ -17,13 +15,13 @@ public interface GiftCertificateService {
      * @param sortType type of sorting
      * @return List of certificates corresponding to the parameters
      */
-    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType);
+    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size);
 
     /**
      * Retrieves all certificates
      * @return List of all certificates
      */
-    List<GiftCertificateDto> getAllGiftCertificates();
+    List<GiftCertificateDto> getAllGiftCertificates(int page, int size, String sortBy, String sortType);
 
     /**
      * Retrieves a certificate by id
