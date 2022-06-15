@@ -3,6 +3,7 @@ package com.epam.esm.core.repository.impl;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.DuplicateTagNameException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
+import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.TagRepository;
 import org.springframework.stereotype.Repository;
 
@@ -61,8 +62,7 @@ public class TagRepositoryHibernateImpl implements TagRepository {
             try {
                 criteriaQuery.orderBy(sortType.equalsIgnoreCase("ASC") ? criteriaBuilder.asc(root.get(sortBy)) : criteriaBuilder.desc(root.get(sortBy)));
             } catch (IllegalArgumentException e) {
-//                FIXME add custom exception
-                throw new RuntimeException("sortBy is not valid");
+                throw new InvalidSortParamsException("sortByNotFoundExceptionMessage");
             }
             query = entityManager.createQuery(criteriaQuery);
         } else {
