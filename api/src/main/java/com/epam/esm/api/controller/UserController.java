@@ -23,9 +23,9 @@ public class UserController {
         this.orderController = orderController;
     }
 
-    @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(this::addLinksToUser).collect(Collectors.toList());
+    @GetMapping(params = {"page", "size"})
+    public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return userService.getAllUsers(page, size).stream().map(this::addLinksToUser).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -33,16 +33,16 @@ public class UserController {
         return addLinksToUser(userService.getUserById(id));
     }
 
-    @GetMapping("/{id}/orders")
-    public List<OrderDto> getOrdersForUserById(@PathVariable String id) {
-        return userService.getOrdersForUserById(id).stream().map(orderController::addLinksToOrder).collect(Collectors.toList());
+    @GetMapping(path = "/{id}/orders", params = {"page", "size"})
+    public List<OrderDto> getOrdersForUserById(@PathVariable String id, @RequestParam("page") int page, @RequestParam("size") int size) {
+        return userService.getOrdersForUserById(id, page, size).stream().map(orderController::addLinksToOrder).collect(Collectors.toList());
     }
 
     private UserDto addLinksToUser(UserDto userDto) {
         userDto.add(linkTo(methodOn(UserController.class)
                         .getUserById(String.valueOf(userDto.getId()))).withSelfRel());
         userDto.add(linkTo(methodOn(UserController.class)
-                        .getOrdersForUserById(String.valueOf(userDto.getId()))).withRel("orders"));
+                        .getOrdersForUserById(String.valueOf(userDto.getId()), 1, 5)).withRel("orders"));
         return userDto;
     }
 }

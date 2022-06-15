@@ -14,7 +14,7 @@ public interface GiftCertificateRepository {
      * @return List of certificates corresponding to the parameters
      */
     //List<GiftCertificate> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto);
-    List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType);
+    List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size);
 
     Set<Tag> getAllTagsForGiftCertificateById(long id);
 
@@ -29,7 +29,7 @@ public interface GiftCertificateRepository {
      * Retrieves all certificates
      * @return List of all certificates
      */
-    List<GiftCertificate> getAllGiftCertificates();
+    List<GiftCertificate> getAllGiftCertificates(int page, int size);
 
     /**
      * Adds a certificate

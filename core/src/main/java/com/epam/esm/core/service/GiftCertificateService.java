@@ -15,13 +15,13 @@ public interface GiftCertificateService {
      * @param sortType type of sorting
      * @return List of certificates corresponding to the parameters
      */
-    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType);
+    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size);
 
     /**
      * Retrieves all certificates
      * @return List of all certificates
      */
-    List<GiftCertificateDto> getAllGiftCertificates();
+    List<GiftCertificateDto> getAllGiftCertificates(int page, int size);
 
     /**
      * Retrieves a certificate by id

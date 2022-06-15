@@ -2,6 +2,7 @@ package com.epam.esm.core.repository.impl;
 
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,11 +25,11 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
     }
 
     @Override
-    public List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType) {
+    public List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
-        Join<GiftCertificate, Tag> tagJoin = root.join("tagSet");
+        Join<GiftCertificate, Tag> tagJoin = root.join("tagSet", JoinType.LEFT);
         criteriaQuery.select(root);
         List<Predicate> predicates = new ArrayList<>();
         if (name != null) predicates.add(criteriaBuilder.like(root.get("name"), "%"+name+"%"));
@@ -45,13 +46,18 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
 
         criteriaQuery.distinct(true);
         TypedQuery<GiftCertificate> query = entityManager.createQuery(criteriaQuery);
+        int lastPageNumber = (int) Math.ceil((double)query.getResultList().size() / size);
+        lastPageNumber = lastPageNumber == 0 ? 1 : lastPageNumber;
+        if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
+
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
         return query.getResultList();
     }
 
     @Override
     public Set<Tag> getAllTagsForGiftCertificateById(long id) {
         GiftCertificate giftCertificate = entityManager.find(GiftCertificate.class, id);
-        System.out.println(giftCertificate);
         return giftCertificate.getTagSet();
     }
 
@@ -62,8 +68,15 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
     }
 
     @Override
-    public List<GiftCertificate> getAllGiftCertificates() {
+    public List<GiftCertificate> getAllGiftCertificates(int page, int size) {
+        TypedQuery<Long> countQuery = entityManager.createQuery("select count(certificate) from GiftCertificate certificate", Long.class);
+        int lastPageNumber = (int) Math.ceil((double)countQuery.getSingleResult() / size);
+
+        if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
+
         TypedQuery<GiftCertificate> query = entityManager.createQuery("from GiftCertificate", GiftCertificate.class);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
         return query.getResultList();
     }
 

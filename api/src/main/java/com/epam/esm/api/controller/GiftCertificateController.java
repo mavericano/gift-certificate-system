@@ -26,18 +26,20 @@ public class GiftCertificateController {
         this.bindingResultParser = bindingResultParser;
     }
 
-    @GetMapping("/search")
+    @GetMapping(path = "/search", params = {"page", "size"})
     public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestParam(required = false) String tagName,
                                                                          @RequestParam(required = false) String sortBy,
                                                                          @RequestParam(required = false) String sortType,
                                                                          @RequestParam(required = false) String name,
-                                                                         @RequestParam(required = false) String description) {
-        return giftCertificateService.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
+                                                                         @RequestParam(required = false) String description,
+                                                                         @RequestParam("page") int page,
+                                                                         @RequestParam("size") int size) {
+        return giftCertificateService.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType, page, size).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
     }
 
-    @GetMapping()
-    public List<GiftCertificateDto> getAllGiftCertificates() {
-        return giftCertificateService.getAllGiftCertificates().stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
+    @GetMapping(params = {"page", "size"})
+    public List<GiftCertificateDto> getAllGiftCertificates(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return giftCertificateService.getAllGiftCertificates(page, size).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
