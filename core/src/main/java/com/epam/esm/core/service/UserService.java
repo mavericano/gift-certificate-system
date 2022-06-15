@@ -9,6 +9,6 @@ import java.util.List;
 //TODO javadoc
 public interface UserService {
     UserDto getUserById(String id);
-    List<UserDto> getAllUsers(int page, int size);
-    List<OrderDto> getOrdersForUserById(String id, int page, int size);
+    List<UserDto> getAllUsers(int page, int size, String sortBy, String sortType);
+    List<OrderDto> getOrdersForUserById(String id, int page, int size, String sortBy, String sortType);
 }

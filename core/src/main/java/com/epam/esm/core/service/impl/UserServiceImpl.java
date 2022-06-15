@@ -8,12 +8,15 @@ import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
+import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<OrderDto> getOrdersForUserById(String id, int page, int size) {
+    public List<OrderDto> getOrdersForUserById(String id, int page, int size, String sortBy, String sortType) {
         long longId = validateId(id);
+        if ((sortBy == null) ^ (sortType == null)) throw new InvalidRecordException("searchInvalidRecordExceptionMessage");
         if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
 
         List<Order> orders = userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new).getOrders();
@@ -36,14 +40,28 @@ public class UserServiceImpl implements UserService {
         lastPageNumber = lastPageNumber == 0 ? 1 : lastPageNumber;
         if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
 
-        return orders.stream().skip((long) (page - 1) * size).limit(size).map(OrderMapper.INSTANCE::orderToOrderDto).collect(Collectors.toList());
+        return orders.stream().sorted((order1, order2) -> {
+            int ret = 0;
+            if ("orderId".equals(sortBy)) {
+                ret = Long.compare(order1.getOrderId(), order2.getOrderId());
+            } else if ("finalPrice".equals(sortBy)) {
+                ret = order1.getFinalPrice().compareTo(order2.getFinalPrice());
+            } else if ("purchaseTime".equals(sortBy)) {
+                ret =  order1.getPurchaseTime().compareTo(order2.getPurchaseTime());
+            }
+            if ("desc".equalsIgnoreCase(sortType)) {
+                ret *= -1;
+            }
+            return ret;
+        }).skip((long) (page - 1) * size).limit(size).map(OrderMapper.INSTANCE::orderToOrderDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<UserDto> getAllUsers(int page, int size) {
+    public List<UserDto> getAllUsers(int page, int size, String sortBy, String sortType) {
+        if ((sortBy == null) ^ (sortType == null)) throw new InvalidRecordException("searchInvalidRecordExceptionMessage");
         if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
 
-        return userRepository.getAllUsers(page, size).stream().map(UserMapper.INSTANCE::userToUserDto).collect(Collectors.toList());
+        return userRepository.getAllUsers(page, size, sortBy, sortType).stream().map(UserMapper.INSTANCE::userToUserDto).collect(Collectors.toList());
     }
 
     @Override

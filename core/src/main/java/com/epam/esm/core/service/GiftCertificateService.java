@@ -21,7 +21,7 @@ public interface GiftCertificateService {
      * Retrieves all certificates
      * @return List of all certificates
      */
-    List<GiftCertificateDto> getAllGiftCertificates(int page, int size);
+    List<GiftCertificateDto> getAllGiftCertificates(int page, int size, String sortBy, String sortType);
 
     /**
      * Retrieves a certificate by id

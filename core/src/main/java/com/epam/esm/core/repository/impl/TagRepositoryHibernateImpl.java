@@ -1,17 +1,19 @@
 package com.epam.esm.core.repository.impl;
 
 import com.epam.esm.core.entity.Tag;
-import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.DuplicateTagNameException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
+import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.TagRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,13 +48,26 @@ public class TagRepositoryHibernateImpl implements TagRepository {
     }
 
     @Override
-    public List<Tag> getAllTags(int page, int size) {
+    public List<Tag> getAllTags(int page, int size, String sortBy, String sortType) {
         TypedQuery<Long> countQuery = entityManager.createQuery("select count(tag) from Tag tag", Long.class);
         int lastPageNumber = (int) Math.ceil((double)countQuery.getSingleResult() / size);
 
         if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
-
-        TypedQuery<Tag> query = entityManager.createQuery("from Tag", Tag.class);
+        TypedQuery<Tag> query;
+        if (sortType != null) {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
+            Root<Tag> root = criteriaQuery.from(Tag.class);
+            criteriaQuery.select(root);
+            try {
+                criteriaQuery.orderBy(sortType.equalsIgnoreCase("ASC") ? criteriaBuilder.asc(root.get(sortBy)) : criteriaBuilder.desc(root.get(sortBy)));
+            } catch (IllegalArgumentException e) {
+                throw new InvalidSortParamsException("sortByNotFoundExceptionMessage");
+            }
+            query = entityManager.createQuery(criteriaQuery);
+        } else {
+            query = entityManager.createQuery("from Tag", Tag.class);
+        }
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
         return query.getResultList();

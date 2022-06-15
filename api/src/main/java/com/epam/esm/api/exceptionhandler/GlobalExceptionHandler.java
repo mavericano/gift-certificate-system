@@ -57,6 +57,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidSortParamsException.class)
+    public ResponseEntity<ExceptionInfo> handleInvalidSortParamsException(InvalidSortParamsException exception){
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40006, exception.getLocalizedMessage());
+        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {

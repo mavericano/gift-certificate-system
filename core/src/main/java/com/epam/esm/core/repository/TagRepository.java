@@ -25,7 +25,7 @@ public interface TagRepository {
      * Retrieves all tags
      * @return List containing all tags
      */
-    List<Tag> getAllTags(int page, int size);
+    List<Tag> getAllTags(int page, int size, String sortBy, String sortType);
 
     /**
      * Adds a tag
