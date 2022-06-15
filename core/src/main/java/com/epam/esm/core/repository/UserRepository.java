@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface UserRepository {
     Optional<User> getUserById(long id);
 
-    List<User> getAllUsers(int page, int size);
+    List<User> getAllUsers(int page, int size, String sortBy, String sortType);
 }

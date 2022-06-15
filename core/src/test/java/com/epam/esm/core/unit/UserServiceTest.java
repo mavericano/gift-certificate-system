@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-
+//TODO fix tests
     @Mock
     private UserRepository userRepository;
 

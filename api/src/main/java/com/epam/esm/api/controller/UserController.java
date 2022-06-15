@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping(params = {"page", "size"})
-    public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
-        return userService.getAllUsers(page, size).stream().map(this::addLinksToUser).collect(Collectors.toList());
+    public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(name = "sortBy", required = false) String sortBy, @RequestParam(name = "sortType", required = false) String sortType) {
+        return userService.getAllUsers(page, size, sortBy, sortType).stream().map(this::addLinksToUser).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
@@ -34,15 +34,15 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}/orders", params = {"page", "size"})
-    public List<OrderDto> getOrdersForUserById(@PathVariable String id, @RequestParam("page") int page, @RequestParam("size") int size) {
-        return userService.getOrdersForUserById(id, page, size).stream().map(orderController::addLinksToOrder).collect(Collectors.toList());
+    public List<OrderDto> getOrdersForUserById(@PathVariable String id, @RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(name = "sortBy", required = false) String sortBy, @RequestParam(name = "sortType", required = false) String sortType) {
+        return userService.getOrdersForUserById(id, page, size, sortBy, sortType).stream().map(orderController::addLinksToOrder).collect(Collectors.toList());
     }
 
     private UserDto addLinksToUser(UserDto userDto) {
         userDto.add(linkTo(methodOn(UserController.class)
                         .getUserById(String.valueOf(userDto.getId()))).withSelfRel());
         userDto.add(linkTo(methodOn(UserController.class)
-                        .getOrdersForUserById(String.valueOf(userDto.getId()), 1, 5)).withRel("orders"));
+                        .getOrdersForUserById(String.valueOf(userDto.getId()), 1, 5, "orderId", "asc")).withRel("orders"));
         return userDto;
     }
 }
