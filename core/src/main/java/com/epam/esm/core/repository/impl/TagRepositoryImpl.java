@@ -19,79 +19,81 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
-public class TagRepositoryImpl implements TagRepository {
-
-    private final JdbcTemplate jdbcTemplate;
-
-    public TagRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public Optional<Tag> getTagById(long id) {
-        try {
-        return Optional.ofNullable(
-                jdbcTemplate.queryForObject("SELECT * FROM tag WHERE id = ?", new TagRowMapper(), id));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Tag> getTagByName(String name) {
-        try {
-            return Optional.ofNullable(
-                    jdbcTemplate.queryForObject("SELECT * FROM tag WHERE name = ?", new TagRowMapper(), name));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public List<Tag> getAllTags(int page, int size) {
-        return jdbcTemplate.query("SELECT * FROM tag", new TagRowMapper());
-    }
-
-    @Override
-    public Tag addTag(Tag tag) {
-        if (checkIfExistsByName(tag.getName())) {
-            throw new DuplicateTagNameException();
-        } else {
-            KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(con -> {
-                PreparedStatement ps = con.prepareStatement("INSERT INTO tag(name) VALUES (?)",
-                        Statement.RETURN_GENERATED_KEYS);
-                ps.setString(1, tag.getName());
-                return ps;
-            }, keyHolder);
-            if (keyHolder.getKey() != null) {
-                tag.setId(keyHolder.getKey().longValue());
-            } else {
-                throw new KeyHolderException();
-            }
-        }
-        return tag;
-    }
-
-    private boolean checkIfExistsByName(String name) {
-        return jdbcTemplate.query("SELECT count(*) FROM tag WHERE name = ?", rs -> {
-            rs.next();
-            return rs.getInt(1);
-        }, name) > 0;
-    }
-
-    @Override
-    public void removeTagById(long id) {
-        jdbcTemplate.update("DELETE FROM gift_certificate__tag WHERE tag_id = ?", id);
-        jdbcTemplate.update("DELETE FROM tag WHERE id = ?", id);
-    }
-
-    @Override
-    public Set<Tag> fetchAndAddNewTags(Set<Tag> tagSet) {
-        return tagSet.stream().map(tag ->
-                getTagByName(
-                        tag.getName()).
-                        orElseGet(() -> addTag(tag)))
-                .collect(Collectors.toSet());
-    }
+public class TagRepositoryImpl
+//        implements TagRepository
+    {
+//
+//    private final JdbcTemplate jdbcTemplate;
+//
+//    public TagRepositoryImpl(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
+//
+//    @Override
+//    public Optional<Tag> getTagById(long id) {
+//        try {
+//        return Optional.ofNullable(
+//                jdbcTemplate.queryForObject("SELECT * FROM tag WHERE id = ?", new TagRowMapper(), id));
+//        } catch (EmptyResultDataAccessException e) {
+//            return Optional.empty();
+//        }
+//    }
+//
+//    @Override
+//    public Optional<Tag> getTagByName(String name) {
+//        try {
+//            return Optional.ofNullable(
+//                    jdbcTemplate.queryForObject("SELECT * FROM tag WHERE name = ?", new TagRowMapper(), name));
+//        } catch (EmptyResultDataAccessException e) {
+//            return Optional.empty();
+//        }
+//    }
+//
+//    @Override
+//    public List<Tag> getAllTags(int page, int size) {
+//        return jdbcTemplate.query("SELECT * FROM tag", new TagRowMapper());
+//    }
+//
+//    @Override
+//    public Tag addTag(Tag tag) {
+//        if (checkIfExistsByName(tag.getName())) {
+//            throw new DuplicateTagNameException();
+//        } else {
+//            KeyHolder keyHolder = new GeneratedKeyHolder();
+//            jdbcTemplate.update(con -> {
+//                PreparedStatement ps = con.prepareStatement("INSERT INTO tag(name) VALUES (?)",
+//                        Statement.RETURN_GENERATED_KEYS);
+//                ps.setString(1, tag.getName());
+//                return ps;
+//            }, keyHolder);
+//            if (keyHolder.getKey() != null) {
+//                tag.setId(keyHolder.getKey().longValue());
+//            } else {
+//                throw new KeyHolderException();
+//            }
+//        }
+//        return tag;
+//    }
+//
+//    private boolean checkIfExistsByName(String name) {
+//        return jdbcTemplate.query("SELECT count(*) FROM tag WHERE name = ?", rs -> {
+//            rs.next();
+//            return rs.getInt(1);
+//        }, name) > 0;
+//    }
+//
+//    @Override
+//    public void removeTagById(long id) {
+//        jdbcTemplate.update("DELETE FROM gift_certificate__tag WHERE tag_id = ?", id);
+//        jdbcTemplate.update("DELETE FROM tag WHERE id = ?", id);
+//    }
+//
+//    @Override
+//    public Set<Tag> fetchAndAddNewTags(Set<Tag> tagSet) {
+//        return tagSet.stream().map(tag ->
+//                getTagByName(
+//                        tag.getName()).
+//                        orElseGet(() -> addTag(tag)))
+//                .collect(Collectors.toSet());
+//    }
 }

@@ -24,8 +24,9 @@ public class TagController {
     }
 
     @GetMapping(params = {"page", "size"})
-    public List<TagDto> getAllTags(@RequestParam("page") int page, @RequestParam("size") int size) {
-        return tagService.getAllTags(page, size).stream().map(this::addLinksToTag).collect(Collectors.toList());
+    public List<TagDto> getAllTags(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(required = false, name = "sortBy") String sortBy,
+                                   @RequestParam(required = false, name = "sortType") String sortType) {
+        return tagService.getAllTags(page, size, sortBy, sortType).stream().map(this::addLinksToTag).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

@@ -37,10 +37,11 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
         if (tagName != null) predicates.add(criteriaBuilder.equal(tagJoin.get("name"), tagName));
         criteriaQuery.where(predicates.toArray(new Predicate[]{}));
         if (sortType != null) {
-            if (sortType.equalsIgnoreCase("ASC")) {
-                criteriaQuery.orderBy(criteriaBuilder.asc(root.get(sortBy)));
-            } else {
-                criteriaQuery.orderBy(criteriaBuilder.desc(root.get(sortBy)));
+            try {
+                criteriaQuery.orderBy(sortType.equalsIgnoreCase("ASC") ? criteriaBuilder.asc(root.get(sortBy)) : criteriaBuilder.desc(root.get(sortBy)));
+            } catch (IllegalArgumentException e) {
+//                FIXME add custom exception
+                throw new RuntimeException("Invalid sortBy field");
             }
         }
 
