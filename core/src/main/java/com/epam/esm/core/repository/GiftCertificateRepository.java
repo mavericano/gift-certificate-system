@@ -29,7 +29,7 @@ public interface GiftCertificateRepository {
      * Retrieves all certificates
      * @return List of all certificates
      */
-    List<GiftCertificate> getAllGiftCertificates(int page, int size);
+    List<GiftCertificate> getAllGiftCertificates(int page, int size, String sortBy, String sortType);
 
     /**
      * Adds a certificate

@@ -38,8 +38,8 @@ public class GiftCertificateController {
     }
 
     @GetMapping(params = {"page", "size"})
-    public List<GiftCertificateDto> getAllGiftCertificates(@RequestParam("page") int page, @RequestParam("size") int size) {
-        return giftCertificateService.getAllGiftCertificates(page, size).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
+    public List<GiftCertificateDto> getAllGiftCertificates(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(required = false) String sortBy, @RequestParam(required = false) String sortType) {
+        return giftCertificateService.getAllGiftCertificates(page, size, sortBy, sortType).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

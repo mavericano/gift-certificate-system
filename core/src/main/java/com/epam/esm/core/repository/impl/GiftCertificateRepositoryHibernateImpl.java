@@ -2,6 +2,7 @@ package com.epam.esm.core.repository.impl;
 
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import org.springframework.stereotype.Repository;
@@ -69,13 +70,28 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
     }
 
     @Override
-    public List<GiftCertificate> getAllGiftCertificates(int page, int size) {
+    public List<GiftCertificate> getAllGiftCertificates(int page, int size, String sortBy, String sortType) {
         TypedQuery<Long> countQuery = entityManager.createQuery("select count(certificate) from GiftCertificate certificate", Long.class);
         int lastPageNumber = (int) Math.ceil((double)countQuery.getSingleResult() / size);
 
         if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
 
-        TypedQuery<GiftCertificate> query = entityManager.createQuery("from GiftCertificate", GiftCertificate.class);
+        TypedQuery<GiftCertificate> query;
+        if (sortBy != null) {
+            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
+            Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
+            criteriaQuery.select(root);
+            try {
+                criteriaQuery.orderBy(sortType.equalsIgnoreCase("ASC") ? criteriaBuilder.asc(root.get(sortBy)) : criteriaBuilder.desc(root.get(sortBy)));
+            } catch (IllegalArgumentException e) {
+//                FIXME add custom exception
+                throw new RuntimeException("sortBy is not valid");
+            }
+            query = entityManager.createQuery(criteriaQuery);
+        } else {
+            query = entityManager.createQuery("from GiftCertificate", GiftCertificate.class);
+        }
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
         return query.getResultList();

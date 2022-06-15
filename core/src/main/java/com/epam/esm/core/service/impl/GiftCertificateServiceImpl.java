@@ -51,9 +51,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     @Override
-    public List<GiftCertificateDto> getAllGiftCertificates(int page, int size) {
+    public List<GiftCertificateDto> getAllGiftCertificates(int page, int size, String sortBy, String sortType) {
+        if ((sortBy == null) ^ (sortType == null)) throw new InvalidRecordException("searchInvalidRecordExceptionMessage");
         if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
-        return giftCertificateRepository.getAllGiftCertificates(page, size).stream().map(GiftCertificateMapper.INSTANCE::certificateToCertificateDto)
+        return giftCertificateRepository.getAllGiftCertificates(page, size, sortBy, sortType).stream().map(GiftCertificateMapper.INSTANCE::certificateToCertificateDto)
                 .collect(Collectors.toList());
     }
 
