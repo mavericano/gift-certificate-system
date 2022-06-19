@@ -46,9 +46,4 @@ public class UserController {
                         .getOrdersForUserById(String.valueOf(userDto.getId()), 1, 5, "orderId", "asc")).withRel("orders"));
         return userDto;
     }
-
-    @GetMapping("/{id}/top-tag")
-    public TagDto getTopTagForUserById(@PathVariable String id) {
-        return userService.getTopTagForUserById(id);
-    }
 }

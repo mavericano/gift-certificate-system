@@ -31,4 +31,6 @@ public interface TagService {
      * @return tag, identical to the one in the data source
      */
     TagDto addTag(TagDto tag);
+
+    TagDto getTopTag();
 }

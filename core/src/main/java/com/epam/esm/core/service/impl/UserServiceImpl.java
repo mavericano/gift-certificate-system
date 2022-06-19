@@ -7,7 +7,6 @@ import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.GiftCertificate;
-import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
@@ -16,12 +15,9 @@ import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.UserService;
-import javafx.scene.effect.SepiaTone;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,23 +72,22 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.userToUserDto(userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new));
     }
 
-    @Override
-    public TagDto getTopTag() {
-        long longId = validateId(id);
-
-        User user = userRepository.getUserById(longId).orElseThrow(() ->
-//                TODO add exception message i18n
-                new NoSuchRecordException(String.format("No user for id %d", longId)));
-        List<Order> orders = user.getOrders();
-        for (Order order : orders) {
-            List<GiftCertificate> certificates = order.getCertificates();
-            for (GiftCertificate certificate : certificates) {
-                Set<Tag> tags = certificate.getTagSet();
-
-            }
-        }
-        return null;
-    }
+//    @Override
+//    public TagDto getTopTag() {
+//
+//        User user = userRepository.getUserById(longId).orElseThrow(() ->
+////                TODO add exception message i18n
+//                new NoSuchRecordException(String.format("No user for id %d", longId)));
+//        List<Order> orders = user.getOrders();
+//        for (Order order : orders) {
+//            List<GiftCertificate> certificates = order.getCertificates();
+//            for (GiftCertificate certificate : certificates) {
+//                Set<Tag> tags = certificate.getTagSet();
+//
+//            }
+//        }
+//        return null;
+//    }
 
     //Get the most widely used tag of a user with the highest cost of all orders
 

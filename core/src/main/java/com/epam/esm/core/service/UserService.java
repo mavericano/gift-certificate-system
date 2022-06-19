@@ -12,5 +12,5 @@ public interface UserService {
     UserDto getUserById(String id);
     List<UserDto> getAllUsers(int page, int size, String sortBy, String sortType);
     List<OrderDto> getOrdersForUserById(String id, int page, int size, String sortBy, String sortType);
-    TagDto getTopTag();
+//    TagDto getTopTag();
 }
