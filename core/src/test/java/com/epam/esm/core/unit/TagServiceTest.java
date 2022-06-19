@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
@@ -62,14 +63,14 @@ public class TagServiceTest {
         Assertions.assertThrows(NoSuchRecordException.class, () -> tagService.getTagById(String.valueOf(id)));
     }
 
-//    @Test
-//    public void shouldReturnEmptyListIfRepositoryIsEmpty(){
-//        when(tagRepository.getAllTags(1, 1)).thenReturn(new ArrayList<>());
-//
-//        Assertions.assertTrue(tagService.getAllTags(1, 1).isEmpty());
-//
-//        verify(tagRepository).getAllTags(1, 1);
-//    }
+    @Test
+    public void shouldReturnEmptyListIfRepositoryIsEmpty(){
+        when(tagRepository.getAllTags(1, 1, "id", "asc")).thenReturn(new ArrayList<>());
+
+        Assertions.assertTrue(tagService.getAllTags(1, 1, "id", "asc").isEmpty());
+
+        verify(tagRepository).getAllTags(1, 1, "id", "asc");
+    }
 
     @Test
     public void shouldAddTag() {
