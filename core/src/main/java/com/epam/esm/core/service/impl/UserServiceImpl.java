@@ -72,25 +72,6 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.userToUserDto(userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new));
     }
 
-//    @Override
-//    public TagDto getTopTag() {
-//
-//        User user = userRepository.getUserById(longId).orElseThrow(() ->
-////                TODO add exception message i18n
-//                new NoSuchRecordException(String.format("No user for id %d", longId)));
-//        List<Order> orders = user.getOrders();
-//        for (Order order : orders) {
-//            List<GiftCertificate> certificates = order.getCertificates();
-//            for (GiftCertificate certificate : certificates) {
-//                Set<Tag> tags = certificate.getTagSet();
-//
-//            }
-//        }
-//        return null;
-//    }
-
-    //Get the most widely used tag of a user with the highest cost of all orders
-
     private long validateId(String id) {
         if (StringUtils.isNumeric(id)) {
             return Long.parseLong(id);

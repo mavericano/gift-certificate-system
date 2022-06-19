@@ -120,7 +120,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDto updateGiftCertificatePartially(String id, Map<String, Object> updates) {
         if (updates == null) {
-            //TODO add msg
             throw new InvalidRecordException("updateInvalidRecordExceptionMessage");
         }
         long longId = validateId(id);
@@ -134,14 +133,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                         value = (value instanceof Integer) ? BigDecimal.valueOf((int) value) : BigDecimal.valueOf((double) value);
                     }
                     ReflectionUtils.setField(field, giftCertificate.get(), value);
-                } else {
-//                    TODO add
-                    throw new RuntimeException("(totally a debug msg) field null in reflection in patch");
                 }
             });
             return GiftCertificateMapper.INSTANCE.certificateToCertificateDto(giftCertificateRepository.updateGiftCertificateFull(giftCertificate.get()));
         } else {
-//            TODO fix msg
             throw new InvalidRecordException("updateInvalidRecordExceptionMessage");
         }
     }
