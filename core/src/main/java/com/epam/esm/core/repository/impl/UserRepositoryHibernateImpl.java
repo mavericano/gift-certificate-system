@@ -1,6 +1,5 @@
 package com.epam.esm.core.repository.impl;
 
-import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidSortParamsException;
@@ -11,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

@@ -18,10 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -97,9 +94,9 @@ public class TagServiceTest {
         GiftCertificate candyKitty = GiftCertificate.builder().id(2).tagSet(new HashSet<>(Arrays.asList(candy, kitty))).build();
         GiftCertificate candyKittyPuppy = GiftCertificate.builder().id(3).tagSet(new HashSet<>(Arrays.asList(candy, kitty, puppy))).build();
         User user = User.builder().id(1).username("dr_grave").build();
-        Order firstOrder = Order.builder().orderId(1).customer(user).certificates(Arrays.asList(candyPuppy)).build();
-        Order secondOrder = Order.builder().orderId(2).customer(user).certificates(Arrays.asList(candyKitty)).build();
-        Order thirdOrder = Order.builder().orderId(3).customer(user).certificates(Arrays.asList(candyKittyPuppy)).build();
+        Order firstOrder = Order.builder().orderId(1).customer(user).certificates(Collections.singletonList(candyPuppy)).build();
+        Order secondOrder = Order.builder().orderId(2).customer(user).certificates(Collections.singletonList(candyKitty)).build();
+        Order thirdOrder = Order.builder().orderId(3).customer(user).certificates(Collections.singletonList(candyKittyPuppy)).build();
         user.setOrders(Arrays.asList(firstOrder, secondOrder, thirdOrder));
         when(userRepository.getMaxOrderSumUser()).thenReturn(user);
 

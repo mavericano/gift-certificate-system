@@ -1,19 +1,14 @@
 package com.epam.esm.core.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//@RequiredArgsConstructor
 @Data
 @Entity
 @Table(name = "tag")
@@ -32,7 +27,6 @@ public class Tag {
         joinColumns = @JoinColumn(name = "tag_id"),
         inverseJoinColumns = @JoinColumn(name = "certificate_id")
     )
-    //@JsonBackReference
     private List<GiftCertificate> certificates;
 
     public Tag(long id, String name) {

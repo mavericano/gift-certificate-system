@@ -3,12 +3,8 @@ package com.epam.esm.core.service.impl;
 import com.epam.esm.core.converter.OrderMapper;
 import com.epam.esm.core.converter.UserMapper;
 import com.epam.esm.core.dto.OrderDto;
-import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.Order;
-import com.epam.esm.core.entity.GiftCertificate;
-import com.epam.esm.core.entity.Tag;
-import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidRecordException;
@@ -19,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

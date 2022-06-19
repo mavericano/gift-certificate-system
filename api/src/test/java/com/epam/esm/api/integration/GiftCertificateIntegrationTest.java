@@ -31,7 +31,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
 @WebAppConfiguration
 @AutoConfigureMockMvc
 //@EnableAutoConfiguration

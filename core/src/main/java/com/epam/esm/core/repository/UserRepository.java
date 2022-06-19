@@ -2,7 +2,6 @@ package com.epam.esm.core.repository;
 
 import com.epam.esm.core.entity.User;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 public interface UserRepository {

@@ -4,7 +4,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 public class InvalidPageSizeException extends RuntimeException {
 
-    private String messageKey;
+    private final String messageKey;
 
     @Override
     public String getLocalizedMessage() {

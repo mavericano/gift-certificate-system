@@ -1,6 +1,5 @@
 package com.epam.esm.api.controller;
 
-import com.epam.esm.api.exceptionhandler.BindingResultParser;
 import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.service.GiftCertificateService;
 import org.springframework.http.HttpStatus;
@@ -19,11 +18,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class GiftCertificateController {
 
     final GiftCertificateService giftCertificateService;
-    final BindingResultParser bindingResultParser;
 
-    public GiftCertificateController(GiftCertificateService giftCertificateService, BindingResultParser bindingResultParser) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService) {
         this.giftCertificateService = giftCertificateService;
-        this.bindingResultParser = bindingResultParser;
     }
 
     @GetMapping(path = "/search", params = {"page", "size"})

@@ -31,15 +31,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     final GiftCertificateRepository giftCertificateRepository;
     final TagRepository tagRepository;
-//    final EntityDtoConverter entityDtoConverter;
 
     public GiftCertificateServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository,
                                       @Qualifier("giftCertificateRepositoryHibernateImpl") GiftCertificateRepository giftCertificateRepository
-//                                    ,  EntityDtoConverter entityDtoConverter
     ) {
         this.tagRepository = tagRepository;
         this.giftCertificateRepository = giftCertificateRepository;
-//        this.entityDtoConverter = entityDtoConverter;
     }
 
     @Override
@@ -61,7 +58,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     public GiftCertificateDto getGiftCertificateById(String id) {
         long longId = validateId(id);
-//        Set<Tag> tagSet = giftCertificateRepository.getAllTagsForGiftCertificateById(longId);
         return GiftCertificateMapper.INSTANCE.certificateToCertificateDto(giftCertificateRepository.getGiftCertificateById(longId).orElseThrow(() ->
                 new NoSuchRecordException(String.format("No gift certificate for id %d", longId))));
     }
@@ -86,11 +82,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         requestCertificate.setTagSet(tagSet);
         GiftCertificate addedCertificate = giftCertificateRepository.addGiftCertificate(requestCertificate);
 
-        //giftCertificateRepository.linkTagsToGiftCertificate(addedCertificate.getId(), tagSet);
-
         return GiftCertificateMapper.INSTANCE.certificateToCertificateDto(addedCertificate);
-//                entityDtoConverter.toDto(addedCertificate, giftCertificateRepository.
-//                getAllTagsForGiftCertificateById(addedCertificate.getId()));
     }
 
     @Override

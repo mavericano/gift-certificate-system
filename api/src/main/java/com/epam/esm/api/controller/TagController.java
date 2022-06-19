@@ -2,7 +2,6 @@ package com.epam.esm.api.controller;
 
 import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.service.TagService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

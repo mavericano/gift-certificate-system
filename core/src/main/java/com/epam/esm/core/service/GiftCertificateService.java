@@ -8,7 +8,7 @@ import java.util.Map;
 public interface GiftCertificateService {
     /**
      * Retrieves all certificates corresponding to search parameters
-     * @param tagName name of the tag
+     * @param tagNames names of the tags to find by
      * @param name part of the name of the certificate
      * @param description part of the description of the certificate
      * @param sortBy field to sort by

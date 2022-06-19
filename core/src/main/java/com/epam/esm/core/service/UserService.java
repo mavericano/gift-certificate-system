@@ -2,9 +2,7 @@ package com.epam.esm.core.service;
 
 
 import com.epam.esm.core.dto.OrderDto;
-import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.dto.UserDto;
-import com.epam.esm.core.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
