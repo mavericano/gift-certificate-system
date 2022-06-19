@@ -27,14 +27,14 @@ public class GiftCertificateController {
     }
 
     @GetMapping(path = "/search", params = {"page", "size"})
-    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestParam(required = false) String tagName,
+    public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestParam(required = false) List<String> tagNames,
                                                                          @RequestParam(required = false) String sortBy,
                                                                          @RequestParam(required = false) String sortType,
                                                                          @RequestParam(required = false) String name,
                                                                          @RequestParam(required = false) String description,
                                                                          @RequestParam("page") int page,
                                                                          @RequestParam("size") int size) {
-        return giftCertificateService.getAllGiftCertificatesByRequirements(tagName, name, description, sortBy, sortType, page, size).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
+        return giftCertificateService.getAllGiftCertificatesByRequirements(tagNames, name, description, sortBy, sortType, page, size).stream().map(this::addLinksToGiftCertificate).collect(Collectors.toList());
     }
 
     @GetMapping(params = {"page", "size"})

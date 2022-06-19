@@ -127,11 +127,11 @@ public class GiftCertificateServiceTest {
         tagDtoSet.add(new TagDto(1, "candy"));
         giftCertificateDto.setTagSet(tagDtoSet);
 
-        when(giftCertificateRepository.getAllGiftCertificatesByRequirements("candy", null, null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
+        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(Arrays.asList("candy"), null, null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
 
-        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements("candy", null, null, null, null, 1, 1).get(0));
+        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(Arrays.asList("candy"), null, null, null, null, 1, 1).get(0));
 
-        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements("candy", null, null, null, null, 1, 1);
+        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(Arrays.asList("candy"), null, null, null, null, 1, 1);
     }
 
     @Test
