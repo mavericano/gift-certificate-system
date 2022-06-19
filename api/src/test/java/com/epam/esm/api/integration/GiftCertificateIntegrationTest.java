@@ -84,7 +84,7 @@ public class GiftCertificateIntegrationTest {
 
     @Test
     public void shouldReturnJsonIfGetRequest() throws Exception {
-        mvc.perform(get(CERTIFICATES_ENDPOINT))
+        mvc.perform(get(CERTIFICATES_ENDPOINT + "?page=1&size=1000"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -92,7 +92,7 @@ public class GiftCertificateIntegrationTest {
     @Test
     public void shouldReturnCorrectJsonIfGetRequestById() throws Exception {
         mvc.perform(get(CERTIFICATES_ENDPOINT + "/{id}", String.valueOf(giftCertificateDto.getId())))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId()))
                 .andExpect(jsonPath("$.name").value(giftCertificateDto.getName()))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
@@ -117,7 +117,7 @@ public class GiftCertificateIntegrationTest {
     @Test
     public void shouldReturnCorrectJsonIfPostWithValidBody() throws Exception {
         mvc.perform(post(CERTIFICATES_ENDPOINT).content(toJson(giftCertificateDto)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId() + 1))
                 .andExpect(jsonPath("$.name").value(giftCertificateDto.getName()))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
@@ -142,7 +142,7 @@ public class GiftCertificateIntegrationTest {
     @Test
     public void shouldReturnCorrectJsonIfPutWithValidBody() throws Exception {
         mvc.perform(put(CERTIFICATES_ENDPOINT + "/{id}", 1).content(toJson(giftCertificateDto)).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId()))
                 .andExpect(jsonPath("$.name").value(giftCertificateDto.getName()))
                 .andExpect(jsonPath("$.description").value(giftCertificateDto.getDescription()))
@@ -179,7 +179,7 @@ public class GiftCertificateIntegrationTest {
 
     @Test
     public void shouldReturnCorrectJsonIfSearchWithCorrectParams() throws Exception {
-        mvc.perform(get(CERTIFICATES_ENDPOINT + "/search?name=candy"))
+        mvc.perform(get(CERTIFICATES_ENDPOINT + "/search?name=candy&page=1&size=1000"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$").isArray());
     }
@@ -188,7 +188,7 @@ public class GiftCertificateIntegrationTest {
     public void shouldReturnUpdatedJsonIfPatchWithValidBody() throws Exception {
         String newName = "Limited candy supply";
         mvc.perform(patch(CERTIFICATES_ENDPOINT + "/{id}", 1).content("{\"name\":\"" + newName + "\"}").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(giftCertificateDto.getId()))
                 .andExpect(jsonPath("$.name").value(newName))
