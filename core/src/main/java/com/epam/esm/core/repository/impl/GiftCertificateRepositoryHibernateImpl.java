@@ -2,7 +2,6 @@ package com.epam.esm.core.repository.impl;
 
 import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
-import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
@@ -27,16 +26,36 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
     }
 
     @Override
-    public List<GiftCertificate> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size) {
+    public List<GiftCertificate> getAllGiftCertificatesByRequirements(List<String> tagNames, String name, String description, String sortBy, String sortType, int page, int size) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
         Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
-        Join<GiftCertificate, Tag> tagJoin = root.join("tagSet", JoinType.LEFT);
+
         criteriaQuery.select(root);
         List<Predicate> predicates = new ArrayList<>();
         if (name != null) predicates.add(criteriaBuilder.like(root.get("name"), "%"+name+"%"));
         if (description != null) predicates.add(criteriaBuilder.like(root.get("description"), "%"+description+"%"));
-        if (tagName != null) predicates.add(criteriaBuilder.equal(tagJoin.get("name"), tagName));
+        if (tagNames != null) {
+            List<Predicate> tagPredicates = new ArrayList<>();
+            Subquery<Long> cr = criteriaQuery.subquery(Long.class);
+            Root<GiftCertificate> tagNamesRoot = cr.from(GiftCertificate.class);
+            Join<GiftCertificate, Tag> tagJoin = tagNamesRoot.join("tagSet", JoinType.LEFT);
+            Predicate predicate;
+            tagNames.forEach(tagName -> tagPredicates.add(
+                    criteriaBuilder.equal(
+                            criteriaBuilder.max(
+                                    criteriaBuilder.selectCase().when(criteriaBuilder.equal(tagJoin.get("name"), tagName), 1).otherwise(0).as(Integer.class)
+                            )
+                    , 1)
+            ));
+            cr.select(tagNamesRoot.get("id"));
+            cr.groupBy(tagNamesRoot.get("id"));
+            cr.having(tagPredicates.toArray(new Predicate[0]));
+
+            predicate = criteriaBuilder.in(root.get("id")).value(cr);
+            predicates.add(predicate);
+        }
+
         criteriaQuery.where(predicates.toArray(new Predicate[]{}));
         if (sortType != null) {
             try {

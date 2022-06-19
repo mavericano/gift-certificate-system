@@ -15,7 +15,7 @@ public interface GiftCertificateService {
      * @param sortType type of sorting
      * @return List of certificates corresponding to the parameters
      */
-    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(String tagName, String name, String description, String sortBy, String sortType, int page, int size);
+    List<GiftCertificateDto> getAllGiftCertificatesByRequirements(List<String> tagNames, String name, String description, String sortBy, String sortType, int page, int size);
 
     /**
      * Retrieves all certificates
