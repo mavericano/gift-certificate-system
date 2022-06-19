@@ -1,6 +1,7 @@
 package com.epam.esm.api.controller;
 
 import com.epam.esm.core.dto.OrderDto;
+import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

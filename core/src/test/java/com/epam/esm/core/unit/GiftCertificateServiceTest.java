@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
@@ -67,20 +68,20 @@ public class GiftCertificateServiceTest {
 
     @Test
     public void shouldReturnEmptyListIfRepositoryIsEmpty(){
-        when(giftCertificateRepository.getAllGiftCertificates()).thenReturn(new ArrayList<>());
+        when(giftCertificateRepository.getAllGiftCertificates(1, 1, "id", "asc")).thenReturn(new ArrayList<>());
 
-        Assertions.assertTrue(giftCertificateService.getAllGiftCertificates().isEmpty());
+        Assertions.assertTrue(giftCertificateService.getAllGiftCertificates(1, 1, "id", "asc").isEmpty());
 
-        verify(giftCertificateRepository).getAllGiftCertificates();
+        verify(giftCertificateRepository).getAllGiftCertificates(1, 1, "id", "asc");
     }
 
     @Test
     public void shouldReturnNonEmptyListIfRepositoryIsNonEmpty() {
-        when(giftCertificateRepository.getAllGiftCertificates()).thenReturn(Arrays.asList(new GiftCertificate(), new GiftCertificate()));
+        when(giftCertificateRepository.getAllGiftCertificates(1, 1, "id", "asc")).thenReturn(Arrays.asList(new GiftCertificate(), new GiftCertificate()));
 
-        Assertions.assertFalse(giftCertificateService.getAllGiftCertificates().isEmpty());
+        Assertions.assertFalse(giftCertificateService.getAllGiftCertificates(1, 1, "id", "asc").isEmpty());
 
-        verify(giftCertificateRepository).getAllGiftCertificates();
+        verify(giftCertificateRepository).getAllGiftCertificates(1, 1, "id", "asc");
     }
 
     @Test
@@ -184,5 +185,31 @@ public class GiftCertificateServiceTest {
         when(tagRepository.fetchAndAddNewTags(tagSet)).thenReturn(tagSet);
 
         Assertions.assertEquals(giftCertificateDto, giftCertificateService.updateGiftCertificateFull(String.valueOf(id), giftCertificateDto));
+    }
+
+    @Test
+    public void shouldUpdateGiftCertificatePartially() {
+        GiftCertificate giftCertificate = new GiftCertificate();
+        GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
+        long id = 1;
+        giftCertificate.setId(id);
+        giftCertificateDto.setId(id);
+
+        giftCertificate.setPrice(BigDecimal.valueOf(52.5));
+        giftCertificateDto.setPrice(BigDecimal.valueOf(52.5));
+
+        Set<TagDto> tagDtoSet = new HashSet<>();
+        giftCertificateDto.setTagSet(tagDtoSet);
+
+        Set<Tag> tagSet = new HashSet<>();
+        giftCertificate.setTagSet(tagSet);
+
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("price", 52.5);
+
+        when(giftCertificateRepository.updateGiftCertificateFull(giftCertificate)).thenReturn(giftCertificate);
+        when(giftCertificateRepository.getGiftCertificateById(id)).thenReturn(Optional.of(giftCertificate));
+
+        Assertions.assertEquals(giftCertificateDto, giftCertificateService.updateGiftCertificatePartially(String.valueOf(id), updates));
     }
 }

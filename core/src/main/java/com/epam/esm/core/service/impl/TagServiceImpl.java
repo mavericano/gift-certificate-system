@@ -2,35 +2,36 @@ package com.epam.esm.core.service.impl;
 
 import com.epam.esm.core.converter.TagMapper;
 import com.epam.esm.core.dto.TagDto;
+import com.epam.esm.core.entity.GiftCertificate;
+import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.Tag;
+import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.TagRepository;
+import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.TagService;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class TagServiceImpl implements TagService {
 
-    //final ApplicationContext applicationContext;
+    private final TagRepository tagRepository;
+    private final UserRepository userRepository;
 
-    final TagRepository tagRepository;
-
-    public TagServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository) {
+    public TagServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository, UserRepository userRepository) {
         this.tagRepository = tagRepository;
-        //this.applicationContext = applicationContext;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -60,6 +61,43 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto addTag(TagDto tag) {
         return TagMapper.INSTANCE.tagToTagDto(tagRepository.addTag(TagMapper.INSTANCE.tagDtoToTag(tag)));
+    }
+
+    @Override
+    public TagDto getTopTag() {
+        User user = userRepository.getMaxOrderSumUser();
+//        user.getOrders().stream().
+//                map(Order::getCertificates).
+//
+//                forEach(null);
+//        System.out.println(user);
+//        return TagMapper.INSTANCE.tagToTagDto(tagRepository.getTopTag());
+        return TagMapper.INSTANCE.tagToTagDto(getTopTagForUser(user));
+    }
+
+    private Tag getTopTagForUser(User user) {
+        Set<Tag> uniqueTags = new HashSet<>();
+        Map<Tag, Integer> tagCounts = new HashMap<>();
+        for (Order order : user.getOrders()) {
+            List<GiftCertificate> certificates = order.getCertificates();
+            for (GiftCertificate certificate : certificates) {
+                Set<Tag> tags = certificate.getTagSet();
+                for (Tag tag : tags) {
+                    if (uniqueTags.add(tag)) {
+                        //add to counts
+                        tagCounts.put(tag, 1);
+                    } else {
+                        //increase counter
+                        tagCounts.replace(tag, tagCounts.get(tag) + 1);
+                    }
+                }
+            }
+        }
+
+
+        return tagCounts.entrySet().stream().
+                sorted((entry1, entry2) -> entry2.getValue() - entry1.getValue()).
+                collect(Collectors.toList()).get(0).getKey();
     }
 
     private long validateId(String id) {

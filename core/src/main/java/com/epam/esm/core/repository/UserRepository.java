@@ -9,4 +9,6 @@ public interface UserRepository {
     Optional<User> getUserById(long id);
 
     List<User> getAllUsers(int page, int size, String sortBy, String sortType);
+
+    User getMaxOrderSumUser();
 }

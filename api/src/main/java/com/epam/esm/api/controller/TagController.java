@@ -23,6 +23,11 @@ public class TagController {
         this.tagService = tagService;
     }
 
+    @GetMapping("/top-tag")
+    public TagDto getTopTagForUserById() {
+        return tagService.getTopTag();
+    }
+
     @GetMapping(params = {"page", "size"})
     public List<TagDto> getAllTags(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(required = false, name = "sortBy") String sortBy,
                                    @RequestParam(required = false, name = "sortType") String sortType) {
