@@ -15,7 +15,6 @@ import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.TagService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,12 +65,6 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDto getTopTag() {
         User user = userRepository.getMaxOrderSumUser();
-//        user.getOrders().stream().
-//                map(Order::getCertificates).
-//
-//                forEach(null);
-//        System.out.println(user);
-//        return TagMapper.INSTANCE.tagToTagDto(tagRepository.getTopTag());
         return TagMapper.INSTANCE.tagToTagDto(getTopTagForUser(user));
     }
 

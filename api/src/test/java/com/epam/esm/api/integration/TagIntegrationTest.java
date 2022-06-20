@@ -3,23 +3,19 @@ package com.epam.esm.api.integration;
 import com.epam.esm.api.Application;
 import com.epam.esm.api.integration.config.IntegrationTestConfig;
 import com.epam.esm.core.dto.TagDto;
-import com.epam.esm.core.entity.Tag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static com.epam.esm.api.integration.util.JsonUtils.toJson;
@@ -27,7 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
 @WebAppConfiguration
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:scripts/init_tag.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -61,15 +56,15 @@ public class TagIntegrationTest {
 
     @Test
     public void shouldReturnJsonIfGetRequest() throws Exception {
-        mvc.perform(get(TAGS_ENDPOINT))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(TAGS_ENDPOINT + "?page=1&size=1000"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldReturnCorrectJsonIfGetRequestById() throws Exception {
         mvc.perform(get(TAGS_ENDPOINT + "/{id}", String.valueOf(tag.getId())))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(tag.getId()))
                 .andExpect(jsonPath("$.name").value(tag.getName()));
     }
@@ -85,7 +80,7 @@ public class TagIntegrationTest {
     public void shouldReturnJsonIfPostRequest() throws Exception {
         tag.setName("food");
         mvc.perform(post(TAGS_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(toJson(tag)))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(tag.getId() + 1))
                 .andExpect(jsonPath("$.name").value(tag.getName()));
     }

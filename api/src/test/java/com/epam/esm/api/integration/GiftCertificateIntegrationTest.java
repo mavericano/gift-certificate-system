@@ -31,16 +31,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
 @WebAppConfiguration
 @AutoConfigureMockMvc
-//@EnableAutoConfiguration
 @Sql(scripts = {"classpath:scripts/init_gift_certificate.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @SpringBootTest(
         classes = Application.class)
-//@TestPropertySource(locations = "classpath:testApplication.properties")
-//@RunWith(SpringRunner.class)
 @Import(IntegrationTestConfig.class)
 public class GiftCertificateIntegrationTest {
     public static final String CERTIFICATES_ENDPOINT = "/api/v1/gift-certificates";

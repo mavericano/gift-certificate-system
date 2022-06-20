@@ -9,11 +9,16 @@ import java.util.Set;
 
 public interface GiftCertificateRepository {
     /**
-     * Retrieves all certificates corresponding to search parameters
-     * @param searchParamsDto parameters of the search
-     * @return List of certificates corresponding to the parameters
+     * Returns all gift certificates by requirements.
+     * @param tagNames tag names to find by
+     * @param name part of name to find by
+     * @param description part of description to find by
+     * @param sortBy sort by field
+     * @param sortType sort type
+     * @param page page number
+     * @param size page size
+     * @return list of gift certificates
      */
-    //List<GiftCertificate> getAllGiftCertificatesByRequirements(SearchParamsDto searchParamsDto);
     List<GiftCertificate> getAllGiftCertificatesByRequirements(List<String> tagNames, String name, String description, String sortBy, String sortType, int page, int size);
 
     Set<Tag> getAllTagsForGiftCertificateById(long id);

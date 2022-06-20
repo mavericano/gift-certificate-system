@@ -26,46 +26,23 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <org.mapstruct.version>1.5.1.Final</org.mapstruct.version>
+    <com.mchange.version>0.9.5.5</com.mchange.version>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>4.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.13.2.2</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>6.2.0.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.el</groupId>
-      <artifactId>javax.el-api</artifactId>
-      <version>3.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>javax.el</artifactId>
-      <version>2.2.6</version>
-    </dependency>
-    <dependency>
-      <groupId>io.spring.platform</groupId>
-      <artifactId>platform-bom</artifactId>
-      <version>1.0.2.RELEASE</version>
-      <type>pom</type>
-      <scope>import</scope>
     </dependency>
     <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct-processor</artifactId>
-      <version>1.4.2.Final</version>
+      <version>${org.mapstruct.version}</version>
     </dependency>
   </dependencies>
 
@@ -135,15 +112,7 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
-          <configuration>
-            <mainClass>com.epam.esm.api.Application</mainClass>
-          </configuration>
         </plugin>
-<!--        <plugin>-->
-<!--          <groupId>org.apache.tomcat.maven</groupId>-->
-<!--          <artifactId>tomcat8-maven-plugin</artifactId>-->
-<!--          <version>3.0-r1655215</version>-->
-<!--        </plugin>-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
@@ -172,7 +141,6 @@
             </annotationProcessorPaths>
           </configuration>
         </plugin>
-
       </plugins>
     </pluginManagement>
   </build>

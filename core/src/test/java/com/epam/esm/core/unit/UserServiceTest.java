@@ -1,8 +1,6 @@
 package com.epam.esm.core.unit;
 
-import com.epam.esm.core.converter.UserMapper;
 import com.epam.esm.core.dto.UserDto;
-import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
@@ -24,7 +22,6 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
-//TODO fix tests
     @Mock
     private UserRepository userRepository;
 

@@ -3,10 +3,10 @@ package com.epam.esm.core.exception;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 public class NoSuchRecordException extends RuntimeException {
-    private final String messageKey = "noSuchRecordExceptionMessage";
 
     @Override
     public String getLocalizedMessage() {
+        String messageKey = "noSuchRecordExceptionMessage";
         return ExceptionMessageHandler.getMessage(messageKey, LocaleContextHolder.getLocale());
     }
     public NoSuchRecordException() {

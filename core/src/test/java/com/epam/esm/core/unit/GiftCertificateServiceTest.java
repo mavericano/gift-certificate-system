@@ -1,6 +1,5 @@
 package com.epam.esm.core.unit;
 
-import com.epam.esm.core.converter.GiftCertificateMapper;
 import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.entity.GiftCertificate;
@@ -127,11 +126,11 @@ public class GiftCertificateServiceTest {
         tagDtoSet.add(new TagDto(1, "candy"));
         giftCertificateDto.setTagSet(tagDtoSet);
 
-        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(Arrays.asList("candy"), null, null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
+        when(giftCertificateRepository.getAllGiftCertificatesByRequirements(Collections.singletonList("candy"), null, null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));
 
-        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(Arrays.asList("candy"), null, null, null, null, 1, 1).get(0));
+        Assertions.assertEquals(giftCertificateDto, giftCertificateService.getAllGiftCertificatesByRequirements(Collections.singletonList("candy"), null, null, null, null, 1, 1).get(0));
 
-        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(Arrays.asList("candy"), null, null, null, null, 1, 1);
+        verify(giftCertificateRepository).getAllGiftCertificatesByRequirements(Collections.singletonList("candy"), null, null, null, null, 1, 1);
     }
 
     @Test

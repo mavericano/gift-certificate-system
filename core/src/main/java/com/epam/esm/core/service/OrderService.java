@@ -3,6 +3,9 @@ package com.epam.esm.core.service;
 import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.OrderRequestDto;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
 public interface OrderService {
 
     /**

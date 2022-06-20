@@ -1,7 +1,6 @@
 package com.epam.esm.core.service;
 
 import com.epam.esm.core.dto.TagDto;
-import com.epam.esm.core.entity.Tag;
 
 import java.util.List;
 
