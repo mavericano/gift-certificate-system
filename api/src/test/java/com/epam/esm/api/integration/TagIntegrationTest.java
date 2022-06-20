@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = Application.class)
 @Import(IntegrationTestConfig.class)
 public class TagIntegrationTest {
+//    TODO fix
     public static final String TAGS_ENDPOINT = "/api/v1/tags";
 
     private final WebApplicationContext webAppContext;
