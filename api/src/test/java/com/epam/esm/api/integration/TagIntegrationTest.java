@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {IntegrationTestConfig.class, WebInitializer.class})
 @WebAppConfiguration
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:scripts/init_tag.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -32,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = Application.class)
 @Import(IntegrationTestConfig.class)
 public class TagIntegrationTest {
-//    TODO fix
     public static final String TAGS_ENDPOINT = "/api/v1/tags";
 
     private final WebApplicationContext webAppContext;
@@ -58,15 +56,15 @@ public class TagIntegrationTest {
 
     @Test
     public void shouldReturnJsonIfGetRequest() throws Exception {
-        mvc.perform(get(TAGS_ENDPOINT))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        mvc.perform(get(TAGS_ENDPOINT + "?page=1&size=1000"))
+                .andExpect(content().contentType("application/json"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void shouldReturnCorrectJsonIfGetRequestById() throws Exception {
         mvc.perform(get(TAGS_ENDPOINT + "/{id}", String.valueOf(tag.getId())))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(tag.getId()))
                 .andExpect(jsonPath("$.name").value(tag.getName()));
     }
@@ -82,7 +80,7 @@ public class TagIntegrationTest {
     public void shouldReturnJsonIfPostRequest() throws Exception {
         tag.setName("food");
         mvc.perform(post(TAGS_ENDPOINT).contentType(MediaType.APPLICATION_JSON).content(toJson(tag)))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType("application/hal+json"))
                 .andExpect(jsonPath("$.id").value(tag.getId() + 1))
                 .andExpect(jsonPath("$.name").value(tag.getName()));
     }
