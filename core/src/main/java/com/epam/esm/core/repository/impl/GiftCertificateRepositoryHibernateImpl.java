@@ -118,9 +118,6 @@ public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRe
     @Override
     public GiftCertificate addGiftCertificate(GiftCertificate giftCertificate) {
         giftCertificate.setId(0);
-        LocalDateTime now = LocalDateTime.now();
-        giftCertificate.setCreateDate(now);
-        giftCertificate.setLastUpdateDate(now);
         entityManager.persist(giftCertificate);
         return giftCertificate;
     }

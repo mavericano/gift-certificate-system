@@ -39,4 +39,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private User customer;
+
+    @PrePersist
+    public void onPrePersist() {
+        setPurchaseTime(LocalDateTime.now());
+    }
 }

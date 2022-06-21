@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -25,4 +26,12 @@ public class User {
 
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
+
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
+    @PrePersist
+    public void onPrePersist() {
+        setCreateDate(LocalDateTime.now());
+    }
 }

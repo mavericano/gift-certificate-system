@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -29,8 +30,11 @@ public class Tag {
     )
     private List<GiftCertificate> certificates;
 
-    public Tag(long id, String name) {
-        this.id = id;
-        this.name = name;
+    @Column(name = "create_date")
+    private LocalDateTime createDate;
+
+    @PrePersist
+    public void onPrePersist() {
+        setCreateDate(LocalDateTime.now());
     }
 }
