@@ -5,7 +5,6 @@ import com.epam.esm.core.repository.OrderRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -19,8 +18,6 @@ public class OrderRepositoryHibernateImpl implements OrderRepository {
 
     @Override
     public Order addOrder(Order order) {
-        LocalDateTime now = LocalDateTime.now();
-        order.setPurchaseTime(now);
         entityManager.persist(order);
         return order;
     }

@@ -63,4 +63,16 @@ public class GiftCertificate {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
     }
+
+    @PrePersist
+    public void onPrePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        setCreateDate(now);
+        setLastUpdateDate(now);
+    }
+
+    @PreUpdate
+    public void onPreUpdate() {
+        setLastUpdateDate(LocalDateTime.now());
+    }
 }
