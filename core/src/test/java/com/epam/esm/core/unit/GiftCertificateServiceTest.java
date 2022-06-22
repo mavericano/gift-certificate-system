@@ -117,13 +117,13 @@ public class GiftCertificateServiceTest {
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(1);
         Set<Tag> tagSet = new HashSet<>();
-        tagSet.add(new Tag(1, "candy"));
+        tagSet.add(Tag.builder().id(1).name("candy").build());
         giftCertificate.setTagSet(tagSet);
 
         GiftCertificateDto giftCertificateDto = new GiftCertificateDto();
         giftCertificateDto.setId(1);
         Set<TagDto> tagDtoSet = new HashSet<>();
-        tagDtoSet.add(new TagDto(1, "candy"));
+        tagDtoSet.add(TagDto.builder().id(1).name("candy").build());
         giftCertificateDto.setTagSet(tagDtoSet);
 
         when(giftCertificateRepository.getAllGiftCertificatesByRequirements(Collections.singletonList("candy"), null, null, null, null, 1, 1)).thenReturn(Collections.singletonList(giftCertificate));

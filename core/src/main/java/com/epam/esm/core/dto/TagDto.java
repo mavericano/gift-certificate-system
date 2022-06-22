@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,11 +21,8 @@ public class TagDto extends RepresentationModel<TagDto> {
     @NotBlank
     private String name;
 
+    private LocalDateTime createDate;
+
     @JsonIgnore
     private List<GiftCertificateDto> certificates;
-
-    public TagDto(long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }
