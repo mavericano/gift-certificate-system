@@ -11,8 +11,10 @@ public interface TagMapper {
         TagMapper INSTANCE = Mappers.getMapper(TagMapper.class);
 
         @Mapping(target = "certificates", ignore = true)
+        @Mapping(target = "createDate", source = "createDate")
         Tag tagDtoToTag(TagDto tagDto);
 
         @Mapping(target = "certificates", ignore = true)
+        @Mapping(target = "createDate", source = "createDate")
         TagDto tagToTagDto(Tag tag);
 }
