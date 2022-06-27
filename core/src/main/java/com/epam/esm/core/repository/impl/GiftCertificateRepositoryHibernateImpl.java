@@ -5,6 +5,7 @@ import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -17,13 +18,10 @@ import java.util.Optional;
 import java.util.Set;
 
 @Repository
+@RequiredArgsConstructor
 public class GiftCertificateRepositoryHibernateImpl implements GiftCertificateRepository {
 
     private final EntityManager entityManager;
-
-    public GiftCertificateRepositoryHibernateImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public List<GiftCertificate> getAllGiftCertificatesByRequirements(List<String> tagNames, String name, String description, String sortBy, String sortType, int page, int size) {

@@ -5,6 +5,7 @@ import com.epam.esm.core.exception.DuplicateTagNameException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.TagRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,13 +21,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Repository
+@RequiredArgsConstructor
 public class TagRepositoryHibernateImpl implements TagRepository {
     //spring injects proxy
     final EntityManager entityManager;
-
-    public TagRepositoryHibernateImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public Optional<Tag> getTagById(long id) {

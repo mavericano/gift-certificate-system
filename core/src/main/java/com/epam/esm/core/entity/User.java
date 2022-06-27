@@ -24,8 +24,17 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "password") //TODO tmp
+    private String password;
+
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
+
+    @ManyToMany
+    @JoinTable(name = "user__role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
     @Column(name = "create_date")
     private LocalDateTime createDate;

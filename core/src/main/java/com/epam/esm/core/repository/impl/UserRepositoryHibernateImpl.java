@@ -4,9 +4,11 @@ import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidSortParamsException;
 import com.epam.esm.core.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
@@ -14,13 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class UserRepositoryHibernateImpl implements UserRepository {
 
     private final EntityManager entityManager;
-
-    public UserRepositoryHibernateImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
 
     @Override
     public Optional<User> getUserById(long id) {
@@ -59,5 +58,24 @@ public class UserRepositoryHibernateImpl implements UserRepository {
         Query query = entityManager.createNativeQuery("SELECT * FROM user u ORDER BY (SELECT SUM(o.final_price) FROM `order` o WHERE u.user_id=o.customer_id) DESC", User.class);
         query.setMaxResults(1);
         return (User) query.getSingleResult();
+    }
+
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        TypedQuery<User> query = entityManager.createQuery("select user from User user where user.username=:username", User.class);
+        query.setParameter("username", username);
+        User user;
+        try {
+            user = query.getSingleResult();
+        } catch (NoResultException e) {
+            user = null;
+        }
+        return Optional.ofNullable(user);
+    }
+
+    @Override
+    public User addUser(User user) {
+        entityManager.persist(user);
+        return user;
     }
 }

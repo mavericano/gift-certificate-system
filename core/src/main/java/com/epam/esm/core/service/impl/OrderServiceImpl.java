@@ -12,6 +12,7 @@ import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.OrderRepository;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,17 +23,12 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     final UserRepository userRepository;
     final GiftCertificateRepository giftCertificateRepository;
     final OrderRepository orderRepository;
-
-    public OrderServiceImpl(UserRepository userRepository, GiftCertificateRepository giftCertificateRepository, OrderRepository orderRepository) {
-        this.userRepository = userRepository;
-        this.giftCertificateRepository = giftCertificateRepository;
-        this.orderRepository = orderRepository;
-    }
 
     @Override
     public OrderDto placeOrder(OrderRequestDto orderRequestDto) {

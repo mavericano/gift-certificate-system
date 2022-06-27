@@ -2,6 +2,7 @@ package com.epam.esm.api.exceptionhandler;
 
 import com.epam.esm.core.exception.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,13 +14,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final BindingResultParser bindingResultParser;
-
-    public GlobalExceptionHandler(BindingResultParser bindingResultParser) {
-        this.bindingResultParser = bindingResultParser;
-    }
 
     @ExceptionHandler(NoSuchRecordException.class)
     public ResponseEntity<ExceptionInfo> handleNoSuchRecordException(NoSuchRecordException exception) {

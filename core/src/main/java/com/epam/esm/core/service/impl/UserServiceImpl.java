@@ -5,26 +5,28 @@ import com.epam.esm.core.converter.UserMapper;
 import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.Order;
+import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidRecordException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<OrderDto> getOrdersForUserById(String id, int page, int size, String sortBy, String sortType) {
@@ -67,6 +69,16 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.userToUserDto(userRepository.getUserById(longId).orElseThrow(NoSuchRecordException::new));
     }
 
+    @Override
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.getUserByUsername(username);
+    }
+
+    @Override
+    public UserDto addUser(UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return UserMapper.INSTANCE.userToUserDto(userRepository.addUser(UserMapper.INSTANCE.userDtoToUser(userDto)));
+    }
     private long validateId(String id) {
         if (StringUtils.isNumeric(id)) {
             return Long.parseLong(id);

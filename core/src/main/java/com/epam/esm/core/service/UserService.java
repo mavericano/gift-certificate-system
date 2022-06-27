@@ -3,9 +3,11 @@ package com.epam.esm.core.service;
 
 import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.UserDto;
+import com.epam.esm.core.entity.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 public interface UserService {
@@ -36,4 +38,8 @@ public interface UserService {
      * @return list of orders
      */
     List<OrderDto> getOrdersForUserById(String id, int page, int size, String sortBy, String sortType);
+
+    Optional<User> getUserByUsername(String username);
+
+    UserDto addUser(UserDto userDto);
 }

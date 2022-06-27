@@ -27,4 +27,8 @@ public interface UserRepository {
      * @return user with max sum of all orders
      */
     User getMaxOrderSumUser();
+
+    Optional<User> getUserByUsername(String username);
+
+    User addUser(User user);
 }

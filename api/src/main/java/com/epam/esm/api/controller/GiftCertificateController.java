@@ -2,6 +2,7 @@ package com.epam.esm.api.controller;
 
 import com.epam.esm.core.dto.GiftCertificateDto;
 import com.epam.esm.core.service.GiftCertificateService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/v1/gift-certificates")
+@RequiredArgsConstructor
 public class GiftCertificateController {
 
     final GiftCertificateService giftCertificateService;
-
-    public GiftCertificateController(GiftCertificateService giftCertificateService) {
-        this.giftCertificateService = giftCertificateService;
-    }
 
     @GetMapping(path = "/search", params = {"page", "size"})
     public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(@RequestParam(required = false) List<String> tagNames,

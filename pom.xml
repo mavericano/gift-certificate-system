@@ -28,6 +28,8 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <org.mapstruct.version>1.5.1.Final</org.mapstruct.version>
     <com.mchange.version>0.9.5.5</com.mchange.version>
+    <jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+    <com.auth0.version>3.19.2</com.auth0.version>
   </properties>
 
   <dependencies>

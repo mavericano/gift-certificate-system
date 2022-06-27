@@ -19,4 +19,6 @@ public class UserDto extends RepresentationModel<UserDto> {
     private String username;
 
     private LocalDateTime createDate;
+
+    private String password;
 }

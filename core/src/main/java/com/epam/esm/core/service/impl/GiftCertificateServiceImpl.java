@@ -14,6 +14,7 @@ import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.service.GiftCertificateService;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,17 +28,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     final GiftCertificateRepository giftCertificateRepository;
     final TagRepository tagRepository;
-
-    public GiftCertificateServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository,
-                                      @Qualifier("giftCertificateRepositoryHibernateImpl") GiftCertificateRepository giftCertificateRepository
-    ) {
-        this.tagRepository = tagRepository;
-        this.giftCertificateRepository = giftCertificateRepository;
-    }
 
     @Override
     public List<GiftCertificateDto> getAllGiftCertificatesByRequirements(List<String> tagNames, String name, String description, String sortBy, String sortType, int page, int size) {

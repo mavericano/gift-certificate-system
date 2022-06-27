@@ -2,6 +2,7 @@ package com.epam.esm.api.controller;
 
 import com.epam.esm.core.dto.TagDto;
 import com.epam.esm.core.service.TagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +15,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/v1/tags")
+@RequiredArgsConstructor
 public class TagController {
 
     final TagService tagService;
-
-    public TagController(TagService tagService) {
-        this.tagService = tagService;
-    }
 
     @GetMapping("/top-tag")
     public TagDto getTopTagForUserById() {

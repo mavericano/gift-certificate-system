@@ -13,6 +13,7 @@ import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.TagRepository;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.TagService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,15 +24,11 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
-
-    public TagServiceImpl(@Qualifier("tagRepositoryHibernateImpl") TagRepository tagRepository, UserRepository userRepository) {
-        this.tagRepository = tagRepository;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public List<TagDto> getAllTags(int page, int size, String sortBy, String sortType) {
