@@ -24,7 +24,7 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "password") //TODO tmp
+    @Column(name = "password")
     private String password;
 
     @OneToMany(mappedBy = "customer")

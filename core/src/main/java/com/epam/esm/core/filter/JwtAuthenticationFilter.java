@@ -2,9 +2,12 @@ package com.epam.esm.core.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.epam.esm.core.exception.ExceptionMessageHandler;
 import com.epam.esm.core.security.jwt.JwtUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -60,5 +64,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         tokens.put("refreshToken", refreshToken);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        Map<String, Object> errors = new LinkedHashMap<>();
+        errors.put("httpStatus", HttpStatus.UNAUTHORIZED);
+        errors.put("errorCode", 40104);
+        errors.put("errorMessage", ExceptionMessageHandler.getMessage("localizedUsernameNotFoundExceptionMessage", LocaleContextHolder.getLocale()));
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), errors);
     }
 }

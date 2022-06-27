@@ -17,7 +17,7 @@ public final class JwtUserFactory {
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .authorities(mapToGrantedAuthorities(user.getRoles()))
-                .enabled(true) //TODO tmp
+                .enabled(true)
                 .build();
     }
 
