@@ -3,6 +3,7 @@ package com.epam.esm.api.exceptionhandler;
 import com.epam.esm.core.exception.*;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 @RequiredArgsConstructor
+@Slf4j
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final BindingResultParser bindingResultParser;
@@ -56,9 +58,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidSortParamsException.class)
-    public ResponseEntity<ExceptionInfo> handleInvalidSortParamsException(InvalidSortParamsException exception){
+    public ResponseEntity<ExceptionInfo> handleInvalidSortParamsException(InvalidSortParamsException exception) {
         ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40006, exception.getLocalizedMessage());
         return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MismatchingCustomerException.class)
+    public ResponseEntity<ExceptionInfo> handleMismatchingCustomerException(MismatchingCustomerException exception) {
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.FORBIDDEN, 40303, exception.getLocalizedMessage());
+        return new ResponseEntity<>(info, HttpStatus.FORBIDDEN);
     }
 
     @Override
@@ -73,6 +81,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionInfo> handleLeftoverException(Exception exception) {
         ExceptionInfo info = new ExceptionInfo(HttpStatus.INTERNAL_SERVER_ERROR, 50001, exception.getLocalizedMessage());
+        log.error("Leftover exception", exception);
         return new ResponseEntity<>(info, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -7,6 +7,7 @@ import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
+import com.epam.esm.core.exception.MismatchingCustomerException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
 import com.epam.esm.core.repository.OrderRepository;
@@ -14,6 +15,8 @@ import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +36,16 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto placeOrder(OrderRequestDto orderRequestDto) {
         User customer = userRepository.getUserById(orderRequestDto.getCustomerId()).orElseThrow(NoSuchRecordException::new);
-        List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id ->
-                giftCertificateRepository.getGiftCertificateById(id).orElseThrow(NoSuchRecordException::new)).collect(Collectors.toList());
-        BigDecimal finalPrice = certificates.stream().map(GiftCertificate::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
-        Order order = Order.builder().customer(customer).certificates(certificates).finalPrice(finalPrice).build();
-        return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.addOrder(order));
+        String currentAuthenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (currentAuthenticatedUsername.equals(customer.getUsername())) {
+            List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id ->
+                    giftCertificateRepository.getGiftCertificateById(id).orElseThrow(NoSuchRecordException::new)).collect(Collectors.toList());
+            BigDecimal finalPrice = certificates.stream().map(GiftCertificate::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+            Order order = Order.builder().customer(customer).certificates(certificates).finalPrice(finalPrice).build();
+            return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.addOrder(order));
+        } else {
+            throw new MismatchingCustomerException();
+        }
     }
 
     @Override

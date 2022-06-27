@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //TODO reconsider
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10*60*1000)) //ten minutes
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1*60*1000)) //ten minutes
                 .withIssuer(request.getRequestURI())
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
@@ -55,14 +55,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withIssuer(request.getRequestURI())
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .sign(algorithm);
-//        response.setHeader("accessToken", accessToken);
-//        response.setHeader("refreshToken", refreshToken);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
-
-//    TODO consider overriding unsuccessfulAuthentication()
 }
