@@ -14,6 +14,7 @@ import com.epam.esm.core.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequiredArgsConstructor
 public class UserController {
 
+    @Value("${jwt.accessToken.lifetime}")
+    private long accessTokenLifetime;
+
+    @Value("${jwt.secret}")
+    private String secret;
     final UserService userService;
     final OrderController orderController;
 
@@ -61,7 +67,7 @@ public class UserController {
         if (authZHeader != null && authZHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authZHeader.substring("Bearer ".length());
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //TODO reconsider
+                Algorithm algorithm = Algorithm.HMAC256(secret.getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
                 String username = decodedJWT.getSubject();
@@ -69,7 +75,7 @@ public class UserController {
 
                 String accessToken = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10*60*1000)) //ten minutes
+                        .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenLifetime)) //ten minutes
                         .withIssuer(request.getRequestURI())
                         .withIssuedAt(new Date(System.currentTimeMillis()))
                         .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))

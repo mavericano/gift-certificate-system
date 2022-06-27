@@ -3,9 +3,13 @@ package com.epam.esm.core.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.epam.esm.core.exception.ExceptionMessageHandler;
+import com.epam.esm.core.security.SecurityUtils;
 import com.epam.esm.core.security.jwt.JwtUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.FilterChain;
@@ -31,23 +36,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final String secret;
+    private final long accessTokenLifetime;
+    private final long refreshTokenLifetime;
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-
         return authenticationManager.authenticate(token);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         JwtUser user = (JwtUser) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //TODO reconsider
+        Algorithm algorithm = Algorithm.HMAC256(secret);
         String accessToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1*60*1000)) //ten minutes
+                .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenLifetime))
                 .withIssuer(request.getRequestURI())
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
@@ -55,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String refreshToken = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 12*60*60*1000)) //twelve hours
+                .withExpiresAt(new Date(System.currentTimeMillis() + refreshTokenLifetime))
                 .withIssuer(request.getRequestURI())
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .sign(algorithm);

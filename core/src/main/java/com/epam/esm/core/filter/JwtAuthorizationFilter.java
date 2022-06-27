@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.epam.esm.core.exception.ExceptionMessageHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+
+    @Value("${jwt.secret}")
+    private String secret;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request.getServletPath().equals("/api/v1/users/login") || request.getServletPath().equals("/api/v1/users/refresh-token")){
@@ -33,7 +37,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             if (authZHeader != null && authZHeader.startsWith("Bearer ")) {
                 try {
                     String token = authZHeader.substring("Bearer ".length());
-                    Algorithm algorithm = Algorithm.HMAC256("secret".getBytes()); //TODO reconsider
+                    Algorithm algorithm = Algorithm.HMAC256(secret.getBytes()); //TODO reconsider
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();

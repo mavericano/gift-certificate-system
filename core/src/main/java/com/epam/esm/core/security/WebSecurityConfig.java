@@ -3,6 +3,7 @@ package com.epam.esm.core.security;
 import com.epam.esm.core.filter.JwtAuthenticationFilter;
 import com.epam.esm.core.filter.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -33,6 +34,15 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.accessToken.lifetime}")
+    private long accessTokenLifetime;
+
+    @Value("${jwt.refreshToken.lifetime}")
+    private long refreshTokenLifetime;
+
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Override
@@ -44,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter authNFilter = new JwtAuthenticationFilter(authenticationManagerBean());
+        JwtAuthenticationFilter authNFilter = new JwtAuthenticationFilter(authenticationManagerBean(), secret, accessTokenLifetime, refreshTokenLifetime);
         authNFilter.setFilterProcessesUrl("/api/v1/users/login");
         http
                 .csrf().disable()
@@ -67,6 +77,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+//    @Bean
+//    public UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter() {
+//    }
 
     //    public static final String REALM_NAME = "MyRealm";
 //    public static final String API_KEY_PARAM = "apikey";
