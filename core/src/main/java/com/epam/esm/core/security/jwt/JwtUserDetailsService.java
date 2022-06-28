@@ -22,8 +22,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        TODO exception message
-        User user = userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException(String.format("No user for username %s", username)));
+        User user = userService.getUserByUsername(username).orElseThrow(() -> new UsernameNotFoundException("")); //being caught higher, unsuccessfulAuthentication  method called
         return JwtUserFactory.create(user);
     }
 }
