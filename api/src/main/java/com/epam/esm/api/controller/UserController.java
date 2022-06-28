@@ -71,21 +71,31 @@ public class UserController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
                 String username = decodedJWT.getSubject();
-                User user = userService.getUserByUsername(username).orElseThrow(null); //TODO fix
+                Optional<User> optionalUser = userService.getUserByUsername(username);
+                if (optionalUser.isPresent()) {
+                    User user = optionalUser.get();
+                    String accessToken = JWT.create()
+                            .withSubject(user.getUsername())
+                            .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenLifetime)) //ten minutes
+                            .withIssuer(request.getRequestURI())
+                            .withIssuedAt(new Date(System.currentTimeMillis()))
+                            .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                            .sign(algorithm);
 
-                String accessToken = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + accessTokenLifetime)) //ten minutes
-                        .withIssuer(request.getRequestURI())
-                        .withIssuedAt(new Date(System.currentTimeMillis()))
-                        .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
-                        .sign(algorithm);
-
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("accessToken", accessToken);
-                tokens.put("refreshToken", refreshToken);
-                response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                    Map<String, String> tokens = new HashMap<>();
+                    tokens.put("accessToken", accessToken);
+                    tokens.put("refreshToken", refreshToken);
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+                } else {
+                    Map<String, Object> errors = new LinkedHashMap<>();
+                    errors.put("httpStatus", HttpStatus.UNAUTHORIZED);
+                    errors.put("errorCode", 40104);
+                    errors.put("errorMessage", ExceptionMessageHandler.getMessage("localizedUsernameNotFoundExceptionMessage", LocaleContextHolder.getLocale()));
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(), errors);
+                }
             } catch (TokenExpiredException e) {
                 Map<String, Object> errors = new LinkedHashMap<>();
                 errors.put("httpStatus", HttpStatus.UNAUTHORIZED);
@@ -104,8 +114,13 @@ public class UserController {
                 new ObjectMapper().writeValue(response.getOutputStream(), errors);
             }
         } else {
-            //TODO refresh token is missing exception
-            throw new RuntimeException("refresh token is missing exception");
+            Map<String, Object> errors = new LinkedHashMap<>();
+            errors.put("httpStatus", HttpStatus.UNAUTHORIZED);
+            errors.put("errorCode", 40105);
+            errors.put("errorMessage", ExceptionMessageHandler.getMessage("authTokenMissingExceptionMessage", LocaleContextHolder.getLocale()));
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), errors);
         }
     }
 
