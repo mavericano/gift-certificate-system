@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users/login/**").permitAll()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users/login/**", "/api/v1/users/signup/**").permitAll()
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/api/v1/users/refresh-token/**").permitAll()
                 .and()
@@ -68,6 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.GET).hasAuthority("USER")
                 .and()
+//                .authorizeRequests().anyRequest().hasAuthority("ADMIN")
+//                .and()
                 .addFilter(authNFilter)
                 .addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
