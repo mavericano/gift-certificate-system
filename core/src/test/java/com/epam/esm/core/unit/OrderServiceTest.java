@@ -17,6 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -56,8 +60,14 @@ public class OrderServiceTest {
     public void shouldThrowExceptionIfCertificateNotExists() {
         long id = 1;
         OrderRequestDto orderRequestDto = OrderRequestDto.builder().customerId(id).certificatesIds(new ArrayList<>()).build();
+        User user = User.builder().id(id).username("mavericano").build();
         orderRequestDto.getCertificatesIds().add(1L);
-        when(userRepository.getUserById(id)).thenReturn(Optional.of(new User()));
+        Authentication authN = mock(Authentication.class);
+        when(authN.getName()).thenReturn("mavericano");
+        SecurityContext context = mock(SecurityContext.class);
+        when(context.getAuthentication()).thenReturn(authN);
+        SecurityContextHolder.setContext(context);
+        when(userRepository.getUserById(id)).thenReturn(Optional.of(user));
         when(giftCertificateRepository.getGiftCertificateById(1L)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(NoSuchRecordException.class, () -> orderService.placeOrder(orderRequestDto));
@@ -69,13 +79,18 @@ public class OrderServiceTest {
     public void shouldAddOrder() {
         long customerId = 1;
         long certificateId = 1;
-        User user = User.builder().id(customerId).build();
+        User user = User.builder().id(customerId).username("mavericano").build();
         GiftCertificate giftCertificate = GiftCertificate.builder().id(certificateId).price(BigDecimal.valueOf(50)).build();
         List<GiftCertificate> certificates = new ArrayList<>();
         certificates.add(giftCertificate);
 
         OrderRequestDto orderRequestDto = OrderRequestDto.builder().customerId(customerId).certificatesIds(Collections.singletonList(certificateId)).build();
 
+        Authentication authN = mock(Authentication.class);
+        when(authN.getName()).thenReturn("mavericano");
+        SecurityContext context = mock(SecurityContext.class);
+        when(context.getAuthentication()).thenReturn(authN);
+        SecurityContextHolder.setContext(context);
         when(userRepository.getUserById(customerId)).thenReturn(Optional.of(user));
         when(giftCertificateRepository.getGiftCertificateById(certificateId)).thenReturn(Optional.of(giftCertificate));
         Order order = Order.builder().customer(user).certificates(certificates).finalPrice(BigDecimal.valueOf(50)).build();
