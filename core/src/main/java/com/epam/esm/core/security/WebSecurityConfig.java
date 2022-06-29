@@ -68,10 +68,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.GET).hasAuthority("USER")
                 .and()
-//                .authorizeRequests().anyRequest().hasAuthority("ADMIN")
-//                .and()
+                .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAuthority("USER")
+                .and()
+                .authorizeRequests().anyRequest().hasAuthority("ADMIN")
+                .and()
                 .addFilter(authNFilter)
-                .addFilterBefore(new JwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthorizationFilter(secret), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
