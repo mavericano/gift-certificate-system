@@ -60,6 +60,13 @@ public class UserController {
         return userService.getOrdersForUserById(id, page, size, sortBy, sortType).stream().map(orderController::addLinksToOrder).collect(Collectors.toList());
     }
 
+    @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto addUser(String username, String password) {
+        UserDto userDto = UserDto.builder().username(username).password(password).build();
+        return userService.addUser(userDto);
+    }
+
     @GetMapping("/refresh-token")
     @SneakyThrows
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
