@@ -11,8 +11,10 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mapping(target = "createDate", source = "createDate")
+    @Mapping(target = "password", ignore = true)
     UserDto userToUserDto(User user);
 
     @Mapping(target = "createDate", source = "createDate")
+    @Mapping(target = "password", ignore = true)
     User userDtoToUser(UserDto userDto);
 }
