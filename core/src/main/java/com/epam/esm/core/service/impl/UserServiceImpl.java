@@ -6,10 +6,7 @@ import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
-import com.epam.esm.core.exception.InvalidIdException;
-import com.epam.esm.core.exception.InvalidPageSizeException;
-import com.epam.esm.core.exception.InvalidRecordException;
-import com.epam.esm.core.exception.NoSuchRecordException;
+import com.epam.esm.core.exception.*;
 import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +73,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserDto userDto) {
+        if (userDto.getUsername() == null || userDto.getPassword() == null) {
+            throw new CredsMissingException();
+        }
+        if (userRepository.getUserByUsername(userDto.getUsername()).isPresent()) {
+            throw new DuplicateUsernameException();
+        }
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return UserMapper.INSTANCE.userToUserDto(userRepository.addUser(UserMapper.INSTANCE.userDtoToUser(userDto)));
     }

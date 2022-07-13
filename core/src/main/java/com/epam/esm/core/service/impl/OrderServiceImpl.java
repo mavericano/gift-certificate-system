@@ -36,15 +36,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto placeOrder(OrderRequestDto orderRequestDto) {
         User customer = userRepository.getUserById(orderRequestDto.getCustomerId()).orElseThrow(NoSuchRecordException::new);
-        String currentAuthenticatedUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (currentAuthenticatedUsername.equals(customer.getUsername())) {
-            List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id ->
-                    giftCertificateRepository.getGiftCertificateById(id).orElseThrow(NoSuchRecordException::new)).collect(Collectors.toList());
-            BigDecimal finalPrice = certificates.stream().map(GiftCertificate::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
-            Order order = Order.builder().customer(customer).certificates(certificates).finalPrice(finalPrice).build();
-            return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.addOrder(order));
+        Authentication authN = SecurityContextHolder.getContext().getAuthentication();
+        if (authN != null) {
+            String currentAuthenticatedUsername = authN.getName();
+            if (currentAuthenticatedUsername.equals(customer.getUsername())) {
+                List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id ->
+                        giftCertificateRepository.getGiftCertificateById(id).orElseThrow(NoSuchRecordException::new)).collect(Collectors.toList());
+                BigDecimal finalPrice = certificates.stream().map(GiftCertificate::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+                Order order = Order.builder().customer(customer).certificates(certificates).finalPrice(finalPrice).build();
+                return OrderMapper.INSTANCE.orderToOrderDto(orderRepository.addOrder(order));
+            } else {
+                throw new MismatchingCustomerException();
+            }
         } else {
-            throw new MismatchingCustomerException();
+            throw new IllegalStateException("No authentication in security context");
         }
     }
 

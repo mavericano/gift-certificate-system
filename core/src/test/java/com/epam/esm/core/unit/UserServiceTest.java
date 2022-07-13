@@ -1,8 +1,11 @@
 package com.epam.esm.core.unit;
 
+import com.epam.esm.core.converter.UserMapper;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
+import com.epam.esm.core.exception.CredsMissingException;
+import com.epam.esm.core.exception.DuplicateUsernameException;
 import com.epam.esm.core.exception.InvalidIdException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.UserRepository;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +28,9 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -107,5 +114,31 @@ public class UserServiceTest {
         Assertions.assertThrows(NoSuchRecordException.class, () -> userService.getOrdersForUserById(String.valueOf(id), 1, 1, "id", "asc"));
 
         verify(userRepository).getUserById(id);
+    }
+
+    @Test
+    public void shouldAddUser() {
+        User user = User.builder().id(1L).username("mavericano").password("1234").build();
+        UserDto userDto = UserMapper.INSTANCE.userToUserDto(user);
+        when(userRepository.addUser(user)).thenReturn(user);
+        when(passwordEncoder.encode("1234")).thenReturn("1234");
+
+        Assertions.assertEquals(userDto, userService.addUser(userDto));
+
+        verify(userRepository).addUser(user);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUsernameIsNull() {
+        UserDto userDto = UserDto.builder().username(null).build();
+
+        Assertions.assertThrows(CredsMissingException.class, () -> userService.addUser(userDto));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenUsernameExists() {
+        UserDto userDto = UserDto.builder().id(1L).username("mavericano").password("1234").build();
+        when(userRepository.getUserByUsername("mavericano")).thenReturn(Optional.of(new User()));
+        Assertions.assertThrows(DuplicateUsernameException.class, () -> userService.addUser(userDto));
     }
 }

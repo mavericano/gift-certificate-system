@@ -69,6 +69,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(info, HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(CredsMissingException.class)
+    public ResponseEntity<ExceptionInfo> handleCredsMissingException(CredsMissingException exception) {
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.BAD_REQUEST, 40007, exception.getLocalizedMessage());
+        return new ResponseEntity<>(info, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateUsernameException.class)
+    public ResponseEntity<ExceptionInfo> handleDuplicateUsernameException(DuplicateUsernameException exception) {
+        ExceptionInfo info = new ExceptionInfo(HttpStatus.CONFLICT, 40902, exception.getLocalizedMessage());
+        return new ResponseEntity<>(info, HttpStatus.CONFLICT);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
