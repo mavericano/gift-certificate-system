@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderService {
         Authentication authN = SecurityContextHolder.getContext().getAuthentication();
         if (authN != null) {
             String currentAuthenticatedUsername = authN.getName();
+            //TODO role
             if (currentAuthenticatedUsername.equals(customer.getUsername())) {
                 List<GiftCertificate> certificates = orderRequestDto.getCertificatesIds().stream().map(id ->
                         giftCertificateRepository.getGiftCertificateById(id).orElseThrow(NoSuchRecordException::new)).collect(Collectors.toList());

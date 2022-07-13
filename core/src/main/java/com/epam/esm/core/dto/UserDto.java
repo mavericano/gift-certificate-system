@@ -1,5 +1,6 @@
 package com.epam.esm.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,6 @@ public class UserDto extends RepresentationModel<UserDto> {
 
     private LocalDateTime createDate;
 
+    @JsonIgnore
     private String password;
 }
