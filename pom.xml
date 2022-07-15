@@ -73,7 +73,6 @@
         <filtering>true</filtering>
       </resource>
     </resources>
-    <finalName>gift-giftCertificate-system</finalName>
     <pluginManagement>
       <plugins>
         <plugin>
