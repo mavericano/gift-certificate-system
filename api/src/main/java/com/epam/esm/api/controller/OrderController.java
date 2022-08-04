@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
