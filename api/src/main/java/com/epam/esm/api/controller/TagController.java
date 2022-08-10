@@ -50,6 +50,13 @@ public class TagController {
         return tagService.addTag(tag);
     }
 
+    @GetMapping(path = "/search", params = {"page", "size"})
+    public List<TagDto> getAllGiftCertificatesByRequirements(@RequestParam(required = false) String name,
+                                                             @RequestParam("page") int page,
+                                                             @RequestParam("size") int size) {
+        return tagService.getAllTagsByName(name, page, size).stream().map(this::addLinksToTag).collect(Collectors.toList());
+    }
+
     private TagDto addLinksToTag(TagDto tag) {
         tag.add(linkTo(methodOn(TagController.class)
                 .getTagById(String.valueOf(tag.getId()))).withSelfRel());

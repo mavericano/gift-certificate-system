@@ -5,6 +5,8 @@ import com.epam.esm.core.dto.TagDto;
 import java.util.List;
 
 public interface TagService {
+    List<TagDto> getAllTagsByName(String name, int page, int size);
+
     /**
      * Retrieves all tags
      * @return List containing all tags

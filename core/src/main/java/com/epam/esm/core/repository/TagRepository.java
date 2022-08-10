@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface TagRepository {
+    List<Tag> getAllTagsByName(String name, int page, int size);
+
     /**
      * Retrieves a tag by id
      * @param id id to find by

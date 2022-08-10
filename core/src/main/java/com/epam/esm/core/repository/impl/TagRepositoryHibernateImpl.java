@@ -1,5 +1,6 @@
 package com.epam.esm.core.repository.impl;
 
+import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Tag;
 import com.epam.esm.core.exception.DuplicateTagNameException;
 import com.epam.esm.core.exception.InvalidPageSizeException;
@@ -25,6 +26,26 @@ import java.util.stream.Collectors;
 public class TagRepositoryHibernateImpl implements TagRepository {
     //spring injects proxy
     final EntityManager entityManager;
+
+    @Override
+    public List<Tag> getAllTagsByName(String name, int page, int size) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tag> criteriaQuery = criteriaBuilder.createQuery(Tag.class);
+        Root<Tag> root = criteriaQuery.from(Tag.class);
+
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.like(root.get("name"), "%"+name+"%"));
+
+        criteriaQuery.distinct(true);
+        TypedQuery<Tag> query = entityManager.createQuery(criteriaQuery);
+        int lastPageNumber = (int) Math.ceil((double)query.getResultList().size() / size);
+        lastPageNumber = lastPageNumber == 0 ? 1 : lastPageNumber;
+        if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
+
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
 
     @Override
     public Optional<Tag> getTagById(long id) {
