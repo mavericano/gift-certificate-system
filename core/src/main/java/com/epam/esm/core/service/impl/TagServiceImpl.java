@@ -15,7 +15,6 @@ import com.epam.esm.core.repository.UserRepository;
 import com.epam.esm.core.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +28,13 @@ public class TagServiceImpl implements TagService {
 
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
+
+    @Override
+    public List<TagDto> getAllTagsByName(String name, int page, int size) {
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+        return tagRepository.getAllTagsByName(name, page, size).stream().map(TagMapper.INSTANCE::tagToTagDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public List<TagDto> getAllTags(int page, int size, String sortBy, String sortType) {
