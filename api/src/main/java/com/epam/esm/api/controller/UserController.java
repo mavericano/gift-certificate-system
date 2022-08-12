@@ -5,11 +5,13 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.epam.esm.core.converter.UserMapper;
 import com.epam.esm.core.dto.OrderDto;
 import com.epam.esm.core.dto.UserDto;
 import com.epam.esm.core.entity.Role;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.ExceptionMessageHandler;
+import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,11 @@ public class UserController {
     private String secret;
     final UserService userService;
     final OrderController orderController;
+
+    @GetMapping("/name/{name}")
+    public UserDto getUserByName(@PathVariable String name) {
+        return addLinksToUser(UserMapper.INSTANCE.userToUserDto(userService.getUserByUsername(name).orElseThrow(NoSuchRecordException::new)));
+    }
 
     @GetMapping(params = {"page", "size"})
     public List<UserDto> getAllUsers(@RequestParam("page") int page, @RequestParam("size") int size, @RequestParam(name = "sortBy", required = false) String sortBy, @RequestParam(name = "sortType", required = false) String sortType) {
