@@ -1,5 +1,6 @@
 package com.epam.esm.core.repository.impl;
 
+import com.epam.esm.core.entity.Role;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.InvalidSortParamsException;
@@ -12,6 +13,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +78,7 @@ public class UserRepositoryHibernateImpl implements UserRepository {
 
     @Override
     public User addUser(User user) {
+        user.setRoles((Collections.singletonList(Role.builder().roleId(1).name("USER").build())));
         entityManager.persist(user);
         return user;
     }
