@@ -7,6 +7,7 @@ import com.epam.esm.core.entity.GiftCertificate;
 import com.epam.esm.core.entity.Order;
 import com.epam.esm.core.entity.User;
 import com.epam.esm.core.exception.InvalidIdException;
+import com.epam.esm.core.exception.InvalidPageSizeException;
 import com.epam.esm.core.exception.MismatchingCustomerException;
 import com.epam.esm.core.exception.NoSuchRecordException;
 import com.epam.esm.core.repository.GiftCertificateRepository;
@@ -32,6 +33,13 @@ public class OrderServiceImpl implements OrderService {
     final UserRepository userRepository;
     final GiftCertificateRepository giftCertificateRepository;
     final OrderRepository orderRepository;
+
+    @Override
+    public List<OrderDto> getAllOrders(int page, int size) {
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+        return orderRepository.getAllOrders(page, size).stream().map(OrderMapper.INSTANCE::orderToOrderDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public OrderDto placeOrder(OrderRequestDto orderRequestDto) {

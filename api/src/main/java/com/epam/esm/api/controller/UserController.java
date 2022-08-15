@@ -48,6 +48,14 @@ public class UserController {
     final UserService userService;
     final OrderController orderController;
 
+
+    @GetMapping(path = "/search", params = {"page", "size"})
+    public List<UserDto> getUsersByRequirements(@RequestParam(required = false) String username,
+                                                @RequestParam("page") int page,
+                                                @RequestParam("size") int size) {
+        return userService.getUsersByRequirements(username, page, size).stream().map(this::addLinksToUser).collect(Collectors.toList());
+    }
+
     @GetMapping("/name/{name}")
     public UserDto getUserByName(@PathVariable String name) {
         return addLinksToUser(UserMapper.INSTANCE.userToUserDto(userService.getUserByUsername(name).orElseThrow(NoSuchRecordException::new)));

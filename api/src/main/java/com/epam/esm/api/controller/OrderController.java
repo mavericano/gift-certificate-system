@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @CrossOrigin
@@ -18,6 +21,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class OrderController {
 
     final OrderService orderService;
+
+    @GetMapping(params = {"page", "size"})
+    public List<OrderDto> getAllOrders(@RequestParam("page") int page, @RequestParam("size") int size) {
+        return orderService.getAllOrders(page, size).stream().map(this::addLinksToOrder).collect(Collectors.toList());
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

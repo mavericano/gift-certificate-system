@@ -28,6 +28,8 @@ public interface UserService {
      */
     List<UserDto> getAllUsers(int page, int size, String sortBy, String sortType);
 
+    List<UserDto> getUsersByRequirements(String username, int page, int size);
+
     /**
      * Returns all orders for a specified user.
      * @param id id of a user

@@ -26,6 +26,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    public List<UserDto> getUsersByRequirements(String username, int page, int size) {
+        if (page < 1 || size < 1) throw new InvalidPageSizeException("pageSizeLessThan1ExceptionMessage");
+        return userRepository.getUsersByRequirements(username, page, size).stream().map(UserMapper.INSTANCE::userToUserDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<OrderDto> getOrdersForUserById(String id, int page, int size, String sortBy, String sortType) {
         long longId = validateId(id);
         if ((sortBy == null) ^ (sortType == null)) throw new InvalidRecordException("searchInvalidRecordExceptionMessage");

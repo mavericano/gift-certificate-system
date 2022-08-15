@@ -13,7 +13,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +26,26 @@ public class UserRepositoryHibernateImpl implements UserRepository {
     @Override
     public Optional<User> getUserById(long id) {
         return Optional.ofNullable(entityManager.find(User.class, id));
+    }
+
+    @Override
+    public List<User> getUsersByRequirements(String username, int page, int size) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> root = criteriaQuery.from(User.class);
+
+        criteriaQuery.select(root);
+        criteriaQuery.where(criteriaBuilder.like(root.get("username"), "%"+username+"%"));
+
+        criteriaQuery.distinct(true);
+        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
+        int lastPageNumber = (int) Math.ceil((double)query.getResultList().size() / size);
+        lastPageNumber = lastPageNumber == 0 ? 1 : lastPageNumber;
+        if (page > lastPageNumber) throw new InvalidPageSizeException("pageNumberTooBigExceptionMessage");
+
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
     }
 
     @Override
