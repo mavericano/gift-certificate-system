@@ -5,8 +5,12 @@ import com.epam.esm.core.dto.OrderRequestDto;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 public interface OrderService {
+
+    List<OrderDto> getAllOrders(int page, int size);
 
     /**
      * Creates an order with customer and certificates, stated in orderReQuestDto

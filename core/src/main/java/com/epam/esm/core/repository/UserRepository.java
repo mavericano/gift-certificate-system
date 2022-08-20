@@ -12,6 +12,8 @@ public interface UserRepository {
      */
     Optional<User> getUserById(long id);
 
+    List<User> getUsersByRequirements(String username, int page, int size);
+
     /**
      * Returns all users.
      * @param page page number
